@@ -1,0 +1,1 @@
+const String BaseURL = "https://erin-device-core-production.ghashful.com/api/v1/core";
