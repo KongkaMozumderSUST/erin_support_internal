@@ -136,9 +136,9 @@ class _DashboardState extends State<Dashboard> {
           final cib = data.cib;
           final profee = data.profee;
           final tcsa = data.tcsa;
-          final customer = data.customerInfo;
-          final product = data.product;
-          final dms = data.dmsInfo;
+          final customer = data.customerInfo!;
+          final product = data.product!;
+          final dms = data.dmsInfo!;
           final mdm = data.mdmInfo;
           final downPayment = data.downPaymentInfo;
           final emiPayable = data.emiPayableInfo;
