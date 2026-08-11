@@ -133,10 +133,10 @@ class _DashboardState extends State<Dashboard> {
 
           final response = snapshot.data!;
           final data = response.data!;
-          final cib = data.cib;
-          final profee = data.profee;
-          final tcsa = data.tcsa;
-          final customer = data.customerInfo!;
+          final cib = data.cib ?? "Null";
+          final profee = data.profee ?? "Null";
+          final tcsa = data.tcsa ?? "Null";
+          final customer = data.customerInfo;
           final product = data.product!;
           final dms = data.dmsInfo!;
           final mdm = data.mdmInfo;

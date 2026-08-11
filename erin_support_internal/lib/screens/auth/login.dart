@@ -151,7 +151,7 @@ class _LoginPageState extends State<Login> {
 
                 // Title & Subtitle
                 const Text(
-                  "Erin Support Portal",
+                  "Erin Support Internal",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
@@ -194,7 +194,7 @@ class _LoginPageState extends State<Login> {
                         decoration: InputDecoration(
                           labelText: "Customer ID",
                           hintText: "Enter ID number",
-                          prefixIcon: const Icon(Icons.badge_outlined, color: Colors.blueAccent),
+                          prefixIcon: const Icon(Icons.badge_outlined, color: const Color(0xFF1A237E)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -204,7 +204,7 @@ class _LoginPageState extends State<Login> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
+                            borderSide: const BorderSide(color: const Color(0xFF1A237E), width: 2),
                           ),
                         ),
                       ),
@@ -216,7 +216,7 @@ class _LoginPageState extends State<Login> {
                         child: ElevatedButton(
                           onPressed: isLoading ? null : login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
+                            backgroundColor: const Color(0xFF1A237E),
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -233,7 +233,7 @@ class _LoginPageState extends State<Login> {
                             ),
                           )
                               : const Text(
-                            "Access Support Data",
+                            "Login",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
