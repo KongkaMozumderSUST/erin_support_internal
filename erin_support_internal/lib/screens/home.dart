@@ -3,7 +3,7 @@ import 'package:erin_support_internal/widgets/bottomBar.dart';
 import 'package:erin_support_internal/screens/balance.dart';
 import 'package:erin_support_internal/screens/dashboard.dart';
 import 'package:erin_support_internal/screens/fix.dart';
-
+import 'package:erin_support_internal/screens/brands.dart';
 
 
 class Home extends StatefulWidget {
@@ -22,6 +22,7 @@ class Home extends StatefulWidget {
   const Dashboard(), //0
   const Balance(), // 1
      const Fix(), //2
+
   ];
 
   @override

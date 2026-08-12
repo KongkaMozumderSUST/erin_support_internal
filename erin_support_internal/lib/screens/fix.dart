@@ -1328,7 +1328,7 @@ Future<void> updateStatus() async {
     // MDM JSON
     final Map<String, dynamic> mdmInfo = {
       'customer_id': customerId ?? '',
-      'mdm_name': 'Walton MDM',
+      'mdm_name': mdmNameController.text.trim(),
       'imei_1': imei1Controller.text.trim(),
       'imei_2': imei2Controller.text.trim(),
     };
