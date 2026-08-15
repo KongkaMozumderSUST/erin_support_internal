@@ -114,7 +114,6 @@ class _FixState extends State<Fix> {
     // ==========================================================
     // MDM
     // ==========================================================
-
     imei1Controller.text = data.mdmInfo?.imei1 ?? '';
     imei2Controller.text = data.mdmInfo?.imei2 ?? '';
     downPaymentController.text =
@@ -340,6 +339,11 @@ class _FixState extends State<Fix> {
             icon: Icons.person_outline,
             title: 'Application Information',
           ),
+          const SizedBox(height: 12),
+          _infoRow(
+            label: 'Customer ID',
+            value: customer?.applicationId ?? 'N/A',
+          ),
 
           const SizedBox(height: 18),
 
@@ -348,12 +352,6 @@ class _FixState extends State<Fix> {
             value: customer?.uuid ?? 'N/A',
           ),
 
-          const SizedBox(height: 12),
-
-          _infoRow(
-            label: 'Customer ID',
-            value: customer?.applicationId ?? 'N/A',
-          ),
 
           const SizedBox(height: 12),
 
@@ -369,6 +367,17 @@ class _FixState extends State<Fix> {
             value:
             customer?.loanCreationDetails?.loanaccno ??
                 'N/A',
+          ),
+          const SizedBox(height: 12),
+          _infoRowMdmOrEmi(
+            label: 'Emi Information',
+            value: customer?.emiInfo != null? "Available" : "Not Available"
+          ),
+          const SizedBox(height: 12),
+          _infoRowMdmOrEmi(
+            label: 'MDM Information',
+            value:
+            customer?.mdmInfo != null? "Available" : "Not Available"
           ),
         ],
       ),
@@ -562,6 +571,7 @@ class _FixState extends State<Fix> {
             controller: mdmNameController,
             label: 'MDM Name',
             icon: Icons.security_outlined,
+              keyboardType: TextInputType.text
           ),
 
           const SizedBox(height: 12),
@@ -971,6 +981,45 @@ class _FixState extends State<Fix> {
   // ============================================================
   // INFO ROW
   // ============================================================
+
+  Widget _infoRowMdmOrEmi({
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+
+      children: [
+        Expanded(
+          child: Text(
+            label,
+
+            style: const TextStyle(
+              color: Color(0xFF64748B),
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        Expanded(
+          child: Text(
+            value,
+
+            textAlign: TextAlign.right,
+
+            style: TextStyle(
+              color: value=="Available"?const Color(0xFF388E3C):const Color(0xFFD50000),
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _infoRow({
     required String label,

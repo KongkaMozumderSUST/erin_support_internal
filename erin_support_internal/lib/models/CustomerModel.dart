@@ -551,7 +551,7 @@ class MdmInfo {
   final String? imei2;
   final String? downPayment;
 
-  MdmInfo({this.customerId, this.imei1, this.imei2, this.downPayment});
+  MdmInfo({ this.customerId, this.imei1, this.imei2, this.downPayment});
 
   factory MdmInfo.fromMap(Map<String, dynamic> json) {
     return MdmInfo(

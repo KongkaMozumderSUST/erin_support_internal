@@ -21,63 +21,6 @@ class _DashboardState extends State<Dashboard> {
     _userFuture = Save.getUser();
   }
 
-  void _showDetailsBottomSheet(String title, List<Widget> children) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.65,
-        minChildSize: 0.4,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) => Column(
-          children: [
-            const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: ListView(
-                controller: scrollController,
-                padding: const EdgeInsets.all(20),
-                children: children,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +81,7 @@ class _DashboardState extends State<Dashboard> {
           final tcsa = data.tcsa ?? "Null";
           final customer = data.customerInfo;
           final product = data.product!;
-          final dms = data.dmsInfo!;
+          final dms = data.dmsInfo;
           final mdm = data.mdmInfo;
           final downPayment = data.downPaymentInfo;
           final emiPayable = data.emiPayableInfo;
@@ -187,6 +130,163 @@ class _DashboardState extends State<Dashboard> {
               ),
               const SizedBox(height: 24),
 
+              // SUPPORT SECTION
+              const Text(
+                "SUPPORT & FINANCIALS",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF64748B),
+                  letterSpacing: 0.8,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                ),
+                child: Column(
+                  children: [
+                    _buildPreferenceTile(
+                      icon: Icons.info_outline,
+                      title: "General & Session Info",
+                      subtitle: "Application ID: ${data.applicationId ?? 'N/A'}",
+                      onTap: () {
+                        _showDetailsBottomSheet("General & Session Info", [
+                          _buildRow("Application ID", data.applicationId),
+                          _buildRow("User Ref No", data.userRefNo),
+                          _buildRow("Bank ID", data.bankId),
+                          _buildRow("Created At", data.createdAt),
+                        ]);
+                      },
+                    ),
+                    _buildDivider(),
+                    _buildPreferenceTile(
+                      icon: Icons.account_balance_wallet_outlined,
+                      title: "Financials & Down Payment",
+                      subtitle: downPayment?.totalDownPayment != null
+                          ? "Total DP: ${downPayment?.totalDownPayment}"
+                          : "View breakdown & charges",
+                      onTap: () {
+                        _showDetailsBottomSheet("Financials & Down Payment", [
+                          _buildRow("Down Payment", downPayment?.downPayment),
+                          _buildRow("Processing Fee", downPayment?.processingFee),
+                          _buildRow("CIB Charge", downPayment?.cibCharge),
+                          _buildRow("Total Down Payment", downPayment?.totalDownPayment),
+                          _buildDivider(),
+                          _buildRow("EMI Duration", emiPayable?.emiDuration),
+                          _buildRow("Initial Amount", emiPayable?.initialAmount),
+                          _buildRow("Total Amount", emiPayable?.totalAmount),
+                          _buildRow(
+                              "Interest Rate",
+                              emiPayable?.interestRate != null
+                                  ? "${emiPayable?.interestRate}%"
+                                  : 'N/A'),
+                          _buildRow("Monthly Amount", emiPayable?.monthlyAmount),
+                        ]);
+                      },
+                    ),
+                    _buildDivider(),
+                    _buildPreferenceTile(
+                      icon: Icons.calendar_today_outlined,
+                      title: "EMI Schedule List",
+                      subtitle: "${emiSchedules?.length ?? 0} schedules available",
+                      onTap: () {
+                        _showDetailsBottomSheet(
+                          "EMI Schedule",
+                          emiSchedules != null && emiSchedules.isNotEmpty
+                              ? emiSchedules
+                              .map((schedule) => Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                              BorderRadius.circular(12),
+                              border: Border.all(
+                                  color: Colors.grey.shade200),
+                            ),
+                            child: ListTile(
+                              contentPadding:
+                              const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 4),
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blue.shade50,
+                                child: Text(
+                                  "${schedule.scheduleNumber ?? ''}",
+                                  style: const TextStyle(
+                                      color: Colors.blueAccent,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              title: Text(
+                                "Date: ${schedule.scheduleDate ?? 'N/A'}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14),
+                              ),
+                              subtitle: Text(
+                                "Amount: ${schedule.emiAmount ?? 'N/A'}",
+                                style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 13),
+                              ),
+                              trailing: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: (schedule.status
+                                      ?.toLowerCase() ==
+                                      'paid')
+                                      ? Colors.green.shade50
+                                      : Colors.orange.shade50,
+                                  borderRadius:
+                                  BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: (schedule.status
+                                        ?.toLowerCase() ==
+                                        'paid')
+                                        ? Colors.green.shade300
+                                        : Colors.orange.shade300,
+                                  ),
+                                ),
+                                child: Text(
+                                  schedule.status ?? 'unpaid',
+                                  style: TextStyle(
+                                    color: (schedule.status
+                                        ?.toLowerCase() ==
+                                        'paid')
+                                        ? Colors.green.shade700
+                                        : Colors.orange.shade800,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ))
+                              .toList()
+                              : [
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Text("No EMI schedule found.",
+                                    style: TextStyle(color: Colors.grey)),
+                              ),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
               // ACCOUNT & PREFERENCES SECTION
               const Text(
                 "ACCOUNT & PREFERENCES",
@@ -198,7 +298,6 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               const SizedBox(height: 12),
-
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -353,161 +452,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               const SizedBox(height: 24),
 
-              // SUPPORT SECTION
-              const Text(
-                "SUPPORT & FINANCIALS",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF64748B),
-                  letterSpacing: 0.8,
-                ),
-              ),
-              const SizedBox(height: 12),
 
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
-                ),
-                child: Column(
-                  children: [
-                    _buildPreferenceTile(
-                      icon: Icons.account_balance_wallet_outlined,
-                      title: "Financials & Down Payment",
-                      subtitle: downPayment?.totalDownPayment != null
-                          ? "Total DP: ${downPayment?.totalDownPayment}"
-                          : "View breakdown & charges",
-                      onTap: () {
-                        _showDetailsBottomSheet("Financials & Down Payment", [
-                          _buildRow("Down Payment", downPayment?.downPayment),
-                          _buildRow("Processing Fee", downPayment?.processingFee),
-                          _buildRow("CIB Charge", downPayment?.cibCharge),
-                          _buildRow("Total Down Payment", downPayment?.totalDownPayment),
-                          _buildDivider(),
-                          _buildRow("EMI Duration", emiPayable?.emiDuration),
-                          _buildRow("Initial Amount", emiPayable?.initialAmount),
-                          _buildRow("Total Amount", emiPayable?.totalAmount),
-                          _buildRow(
-                              "Interest Rate",
-                              emiPayable?.interestRate != null
-                                  ? "${emiPayable?.interestRate}%"
-                                  : 'N/A'),
-                          _buildRow("Monthly Amount", emiPayable?.monthlyAmount),
-                        ]);
-                      },
-                    ),
-                    _buildDivider(),
-                    _buildPreferenceTile(
-                      icon: Icons.calendar_today_outlined,
-                      title: "EMI Schedule List",
-                      subtitle: "${emiSchedules?.length ?? 0} schedules available",
-                      onTap: () {
-                        _showDetailsBottomSheet(
-                          "EMI Schedule",
-                          emiSchedules != null && emiSchedules.isNotEmpty
-                              ? emiSchedules
-                              .map((schedule) => Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                              BorderRadius.circular(12),
-                              border: Border.all(
-                                  color: Colors.grey.shade200),
-                            ),
-                            child: ListTile(
-                              contentPadding:
-                              const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 4),
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.blue.shade50,
-                                child: Text(
-                                  "${schedule.scheduleNumber ?? ''}",
-                                  style: const TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              title: Text(
-                                "Date: ${schedule.scheduleDate ?? 'N/A'}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14),
-                              ),
-                              subtitle: Text(
-                                "Amount: ${schedule.emiAmount ?? 'N/A'}",
-                                style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 13),
-                              ),
-                              trailing: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: (schedule.status
-                                      ?.toLowerCase() ==
-                                      'paid')
-                                      ? Colors.green.shade50
-                                      : Colors.orange.shade50,
-                                  borderRadius:
-                                  BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: (schedule.status
-                                        ?.toLowerCase() ==
-                                        'paid')
-                                        ? Colors.green.shade300
-                                        : Colors.orange.shade300,
-                                  ),
-                                ),
-                                child: Text(
-                                  schedule.status ?? 'unpaid',
-                                  style: TextStyle(
-                                    color: (schedule.status
-                                        ?.toLowerCase() ==
-                                        'paid')
-                                        ? Colors.green.shade700
-                                        : Colors.orange.shade800,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ))
-                              .toList()
-                              : [
-                            const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Text("No EMI schedule found.",
-                                    style: TextStyle(color: Colors.grey)),
-                              ),
-                            )
-                          ],
-                        );
-                      },
-                    ),
-                    _buildDivider(),
-                    _buildPreferenceTile(
-                      icon: Icons.info_outline,
-                      title: "General & Session Info",
-                      subtitle: "Application ID: ${data.applicationId ?? 'N/A'}",
-                      onTap: () {
-                        _showDetailsBottomSheet("General & Session Info", [
-                          _buildRow("Application ID", data.applicationId),
-                          _buildRow("User Ref No", data.userRefNo),
-                          _buildRow("Bank ID", data.bankId),
-                          _buildRow("Created At", data.createdAt),
-                        ]);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
 
 
 
@@ -522,6 +467,64 @@ class _DashboardState extends State<Dashboard> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  void _showDetailsBottomSheet(String title, List<Widget> children) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.65,
+        minChildSize: 0.4,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (context, scrollController) => Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: ListView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(20),
+                children: children,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
