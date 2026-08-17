@@ -250,47 +250,6 @@ class _FixState extends State<Fix> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
 
-      // ========================================================
-      // APP BAR
-      // ========================================================
-
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: const Color(0xFF1A237E),
-        centerTitle: false,
-
-        title: const Text(
-          'Update Info / Fix',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-
-        actions: [
-          IconButton(
-            onPressed: _logout,
-
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-
-              decoration: const BoxDecoration(
-                color: Color(0xFFF1F5F9),
-                shape: BoxShape.circle,
-              ),
-
-              child: const Icon(
-                Icons.logout,
-                color: Color(0xFF0F172A),
-                size: 20,
-              ),
-            ),
-          ),
-
-          const SizedBox(width: 8),
-        ],
-      ),
 
       // ========================================================
       // BODY

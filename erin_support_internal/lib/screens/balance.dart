@@ -72,42 +72,6 @@ class _BalanceState extends State<Balance> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: const Color(0xFF1A237E),
-        centerTitle: false,
-        title: const Text(
-          "Check Balance",
-          style: TextStyle(
-            color:  const Color(0xFFFFFFFF),
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                color: Color(0xFFF1F5F9),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.logout, color: Color(0xFF0F172A), size: 20),
-            ),
-            onPressed: () async {
-              await Save.clearUser();
-              if (!mounted) return;
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const Login()),
-              );
-            },
-
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-
       body: FutureBuilder<ApiResponse?>(
         future: _userFuture,
         builder: (context, snapshot) {
@@ -352,12 +316,6 @@ class _BalanceState extends State<Balance> {
           );
         },
       ),
-
-
-
-
-
-
     );
   }
 
