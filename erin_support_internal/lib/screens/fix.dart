@@ -1092,7 +1092,7 @@ class _FixState extends State<Fix> {
         label: Text(text),
 
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1A237E),
+          backgroundColor:  const Color(0xFF000080),
           foregroundColor: Colors.white,
 
           elevation: 0,
