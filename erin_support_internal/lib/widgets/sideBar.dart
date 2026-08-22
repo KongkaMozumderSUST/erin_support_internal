@@ -27,9 +27,7 @@ class _SideBarState extends State<SideBar> {
       color: navy,
       child: Column(
         children: [
-          // =========================
           // HEADER
-          // =========================
           const SizedBox(height: 50),
           Container(
             height: 80,
@@ -68,10 +66,7 @@ class _SideBarState extends State<SideBar> {
             height: 1,
           ),
 
-          // =========================
           // MENU
-          // =========================
-
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(10),
@@ -99,9 +94,8 @@ class _SideBarState extends State<SideBar> {
 
                 const SizedBox(height: 10),
 
-                // =========================
+
                 // WALTON
-                // =========================
 
                 _brandHeader(
                   title: 'Walton',
@@ -145,9 +139,7 @@ class _SideBarState extends State<SideBar> {
 
                 const SizedBox(height: 6),
 
-                // =========================
                 // SYMPHONY
-                // =========================
 
                 _brandHeader(
                   title: 'Symphony',
@@ -192,9 +184,7 @@ class _SideBarState extends State<SideBar> {
             ),
           ),
 
-          // =========================
           // USER
-          // =========================
 
           const Divider(
             color: Colors.white24,
@@ -241,9 +231,9 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-  // =====================================================
+
   // BRAND HEADER
-  // =====================================================
+
 
   Widget _brandHeader({
     required String title,
@@ -302,9 +292,7 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-  // =====================================================
   // BRAND CHILDREN
-  // =====================================================
 
   Widget _brandChildren(List<Widget> children) {
     return Container(
@@ -330,9 +318,8 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-  // =====================================================
+
   // MAIN MENU
-  // =====================================================
 
   Widget _menuItem({
     required IconData icon,
@@ -389,9 +376,8 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-  // =====================================================
+
   // SUB MENU
-  // =====================================================
 
   Widget _subMenuItem({
     required IconData icon,

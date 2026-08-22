@@ -15,107 +15,16 @@ class Login extends StatefulWidget {
 
 class _LoginPageState extends State<Login> {
   final TextEditingController customerIdController = TextEditingController();
+  final TextEditingController appVersionController = TextEditingController();
   bool isLoading = false;
 
   @override
   void dispose() {
     customerIdController.dispose();
+    appVersionController.dispose();
     super.dispose();
   }
 
-  Future<void> login() async {
-    if (customerIdController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Customer ID is required"),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-    });
-
-    final url = Uri.parse('$BaseURL/auth/support_login');
-
-    final body = jsonEncode({
-      'customer_id': customerIdController.text.trim(),
-      'app_version': 1,
-    });
-
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-
-    try {
-      final res = await http.post(
-        url,
-        body: body,
-        headers: headers,
-      );
-
-      print("Status Code: ${res.statusCode}");
-      print("Response: ${res.body}");
-
-      if (res.statusCode == 200) {
-        final jsonData = jsonDecode(res.body);
-
-        ApiResponse apiResponse = ApiResponse.fromMap(jsonData);
-
-        if (apiResponse.success == true) {
-          await Save.saveUser(apiResponse);
-
-          print("Login Success & Data Saved");
-
-          if (!mounted) return;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Home(),
-            ),
-          );
-        } else {
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(apiResponse.message ?? "Login failed"),
-              backgroundColor: Colors.orange.shade800,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Login failed: ${res.statusCode}"),
-            backgroundColor: Colors.red.shade700,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    } catch (e) {
-      print("Error: $e");
-
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Something went wrong. Please check your network connection."),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,6 +119,29 @@ class _LoginPageState extends State<Login> {
                       ),
                       const SizedBox(height: 24),
 
+                      // TextField(
+                      //   controller: appVersionController,
+                      //   keyboardType: TextInputType.number,
+                      //   style: const TextStyle(fontWeight: FontWeight.w500),
+                      //   decoration: InputDecoration(
+                      //     labelText: "App Version",
+                      //     hintText: "Enter app version",
+                      //     prefixIcon: const Icon(Icons.badge_outlined, color: const Color(0xFF1A237E)),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide(color: Colors.grey.shade300),
+                      //     ),
+                      //     focusedBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: const BorderSide(color: const Color(0xFF1A237E), width: 2),
+                      //     ),
+                      //   ),
+                      // ),
+                     //764388 const SizedBox(height: 24),
+
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -250,5 +182,98 @@ class _LoginPageState extends State<Login> {
         ),
       ),
     );
+  }
+  Future<void> login() async {
+    if (customerIdController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text("Customer ID is required"),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse('$BaseURL/auth/support_login');
+
+    final body = jsonEncode({
+      'customer_id': customerIdController.text.trim(),
+      'app_version': 2,
+    });
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      final res = await http.post(
+        url,
+        body: body,
+        headers: headers,
+      );
+
+      print("Status Code: ${res.statusCode}");
+      print("Response: ${res.body}");
+
+      if (res.statusCode == 200) {
+        final jsonData = jsonDecode(res.body);
+
+        ApiResponse apiResponse = ApiResponse.fromMap(jsonData);
+
+        if (apiResponse.success == true) {
+          await Save.saveUser(apiResponse);
+
+          print("Login Success & Data Saved");
+
+          if (!mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          );
+        } else {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(apiResponse.message ?? "Login failed"),
+              backgroundColor: Colors.orange.shade800,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Login failed: ${res.statusCode}"),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text("Something went wrong. Please check your network connection."),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 }

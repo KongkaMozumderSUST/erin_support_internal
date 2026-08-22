@@ -6,8 +6,18 @@
   import 'package:erin_support_internal/widgets/sideBar.dart';
   import 'package:erin_support_internal/others/save.dart';
   import 'package:erin_support_internal/screens/auth/login.dart';
+  import 'package:erin_support_internal/screens/drawer/symphony/symphony_grace_period.dart';
+ import 'package:erin_support_internal/screens/drawer/symphony/symphony_payment.dart';
+ import 'package:erin_support_internal/screens/drawer/symphony/symphony_unlock.dart';
+ import 'package:erin_support_internal/screens/drawer/symphony/symphony_lock.dart';
+ import 'package:erin_support_internal/screens/drawer/symphony/symphony_sale_replace.dart';
+ import 'package:erin_support_internal/screens/drawer/walton/walton_emi_payment.dart';
+ import 'package:erin_support_internal/screens/drawer/walton/walton_lock.dart';
+ import 'package:erin_support_internal/screens/drawer/walton/walton_unlock.dart';
+ import 'package:erin_support_internal/screens/drawer/walton/walton_sale_replace.dart';
+ import 'package:erin_support_internal/screens/drawer/walton/walton_grace_period.dart';
 
-  class Home extends StatefulWidget {
+ class Home extends StatefulWidget {
   const Home({super.key});
 
   @override
@@ -21,19 +31,18 @@
   const Dashboard(),
   const Balance(),
   const Fix(),
-
-  // Add your Walton/Symphony pages here
-  // const WaltonEmiPayment(),
-  // const WaltonGracePeriod(),
-  // const WaltonLock(),
-  // const WaltonUnlock(),
-  // const WaltonSaleReplace(),
-  //
-  // const SymphonyEmiPayment(),
-  // const SymphonyGracePeriod(),
-  // const SymphonyLock(),
-  // const SymphonyUnlock(),
-  // const SymphonySaleReplace(),
+    //walton
+  const WaltonEmiPayment(),
+  const WaltonGracePeriod(),
+  const WaltonLock(),
+  const WaltonUnlock(),
+  const WaltonSaleReplace(),
+//symphony
+  const SymphonyEmiPayment(),
+  const SymphonyGracePeriod(),
+  const SymphonyLock(),
+  const SymphonyUnlock(),
+  const SymphonySaleReplace(),
   ];
 
   @override
@@ -43,10 +52,7 @@
   final bool isMobile = constraints.maxWidth < 700;
 
   return Scaffold(
-  // ==========================================
   // MOBILE APP BAR
-  // ==========================================
-
   appBar: isMobile ? AppBar(
   backgroundColor: const Color(0xFF000080),
   foregroundColor: Colors.white,
@@ -79,13 +85,10 @@
       const SizedBox(width: 8),
     ],
   )
-
-
       : null,
 
-  // ==========================================
   // MOBILE DRAWER
-  // ==========================================
+
 
   drawer: isMobile? Drawer(
   width: 280,
@@ -101,9 +104,8 @@
   )
       : null,
 
-  // ==========================================
+
   // BODY
-  // ==========================================
 
   body: Row(
     children: [
@@ -125,9 +127,8 @@
   ],
   ),
 
-  // ==========================================
+
   // BOTTOM BAR
-  // ==========================================
 
   bottomNavigationBar: CustomBottomNavBar(
   currentIndex: _currentIndex,

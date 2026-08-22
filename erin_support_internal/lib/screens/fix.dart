@@ -18,21 +18,16 @@ class _FixState extends State<Fix> {
   bool isLoading = true;
 
   LoginData? customer;
-
   String? token;
   String? applicationUuid;
   String? customerId;
   String? mdmName;
 
-  // ============================================================
   // STATUS
-  // ============================================================
 
   String selectedStatus = '';
 
-  // ============================================================
   // MDM
-  // ============================================================
 
   late TextEditingController imei1Controller;
   late TextEditingController imei2Controller;
@@ -40,9 +35,7 @@ class _FixState extends State<Fix> {
   late TextEditingController mdmNameController;
 
 
-  // ============================================================
   // EMI
-  // ============================================================
 
   /*
    * This is the editable EMI list.
@@ -80,9 +73,9 @@ class _FixState extends State<Fix> {
     super.dispose();
   }
 
-  // ============================================================
+
   // INITIALIZE
-  // ============================================================
+
 
   Future<void> _initialize() async {
     final user = await Save.getUser();
@@ -104,27 +97,17 @@ class _FixState extends State<Fix> {
     applicationUuid = data.uuid;
     customerId = data.applicationId;
 
-
-    // ==========================================================
     // STATUS
-    // ==========================================================
-
     selectedStatus = data.status ?? '';
 
-    // ==========================================================
     // MDM
-    // ==========================================================
     imei1Controller.text = data.mdmInfo?.imei1 ?? '';
     imei2Controller.text = data.mdmInfo?.imei2 ?? '';
     downPaymentController.text =
         data.mdmInfo?.downPayment ?? '';
 
-    // ==========================================================
     // EMI
-    // ==========================================================
-
     _prepareEmiList();
-
     setState(() {
       isLoading = false;
     });
@@ -140,9 +123,8 @@ class _FixState extends State<Fix> {
       ),
     );
   }
-  // ============================================================
   // PREPARE EMI LIST
-  // ============================================================
+
 
   void _prepareEmiList() {
     final existingEmiInfo = customer?.emiInfo;
@@ -197,9 +179,8 @@ class _FixState extends State<Fix> {
     }).toList();
   }
 
-  // ============================================================
   // NORMALIZE EMI STATUS
-  // ============================================================
+
 
   String _normalizeEmiStatus(String? status) {
     if (status == null || status.trim().isEmpty) {
@@ -215,9 +196,8 @@ class _FixState extends State<Fix> {
     return 'unpaid';
   }
 
-  // ============================================================
+
   // LOGOUT
-  // ============================================================
 
   Future<void> _logout() async {
     await Save.clearUser();
@@ -232,9 +212,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // BUILD
-  // ============================================================
 
   @override
   Widget build(BuildContext context) {
@@ -251,9 +229,7 @@ class _FixState extends State<Fix> {
       backgroundColor: const Color(0xFFF8FAFC),
 
 
-      // ========================================================
       // BODY
-      // ========================================================
 
       body: RefreshIndicator(
         onRefresh: _initialize,
@@ -284,9 +260,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // APPLICATION INFORMATION
-  // ============================================================
 
   Widget _buildApplicationCard() {
     return _card(
@@ -343,9 +317,9 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
+
   // STATUS CARD
-  // ============================================================
+
 
   Widget _buildStatusCard() {
     final currentStatus = customer?.status ?? 'N/A';
@@ -449,12 +423,20 @@ class _FixState extends State<Fix> {
                 child: Text('11'),
               ),
               DropdownMenuItem(
+                value: '7',
+                child: Text('7'),
+              ),
+              DropdownMenuItem(
                 value: '12',
                 child: Text('12'),
               ),
               DropdownMenuItem(
                 value: '13',
                 child: Text('13'),
+              ),
+              DropdownMenuItem(
+                value: '14',
+                child: Text('14'),
               ),
               DropdownMenuItem(
                 value: '10',
@@ -487,9 +469,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // STATUS DROPDOWN VALUE
-  // ============================================================
 
   String? _statusDropdownValue() {
     final value = selectedStatus.toLowerCase();
@@ -509,9 +489,8 @@ class _FixState extends State<Fix> {
     return null;
   }
 
-  // ============================================================
+
   // MDM CARD
-  // ============================================================
 
   Widget _buildMdmCard() {
     return _card(
@@ -565,9 +544,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // EMI CARD
-  // ============================================================
 
   Widget _buildEmiCard() {
     return _card(
@@ -630,9 +607,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // EMI ITEM
-  // ============================================================
 
   Widget _buildEmiItem({
     required int index,
@@ -657,9 +632,8 @@ class _FixState extends State<Fix> {
         crossAxisAlignment: CrossAxisAlignment.start,
 
         children: [
-          // ======================================================
+
           // HEADER
-          // ======================================================
 
           Row(
             children: [
@@ -693,9 +667,7 @@ class _FixState extends State<Fix> {
 
           const SizedBox(height: 16),
 
-          // ======================================================
           // DATE
-          // ======================================================
 
           _infoRow(
             label: 'Schedule Date',
@@ -706,9 +678,8 @@ class _FixState extends State<Fix> {
 
           const SizedBox(height: 12),
 
-          // ======================================================
           // AMOUNT
-          // ======================================================
+
 
           _infoRow(
             label: 'EMI Amount',
@@ -717,9 +688,7 @@ class _FixState extends State<Fix> {
 
           const SizedBox(height: 14),
 
-          // ======================================================
           // STATUS
-          // ======================================================
 
           const Text(
             'Payment Status',
@@ -765,9 +734,9 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
+
   // EMI STATUS BADGE
-  // ============================================================
+
 
   Widget _emiStatusBadge(String status) {
     final isPaid = status.toLowerCase() == 'paid';
@@ -799,9 +768,9 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
+
   // SHOW EMI PAYLOAD
-  // ============================================================
+
 
   void _showEmiPayload() async {
     await updateEmiInfo();
@@ -845,9 +814,9 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
+
   // EDITABLE FIELD
-  // ============================================================
+
 
   Widget _buildEditableField({
     required TextEditingController controller,
@@ -866,9 +835,8 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // CARD
-  // ============================================================
+
 
   Widget _card({
     required Widget child,
@@ -896,10 +864,8 @@ class _FixState extends State<Fix> {
       child: child,
     );
   }
-
-  // ============================================================
   // SECTION HEADER
-  // ============================================================
+
 
   Widget _sectionHeader({
     required IconData icon,
@@ -937,9 +903,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // INFO ROW
-  // ============================================================
 
   Widget _infoRowMdmOrEmi({
     required String label,
@@ -1019,9 +983,8 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // INPUT DECORATION
-  // ============================================================
+
 
   InputDecoration _inputDecoration({
     required String hint,
@@ -1069,9 +1032,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // PRIMARY BUTTON
-  // ============================================================
 
   Widget _primaryButton({
     required IconData icon,
@@ -1109,9 +1070,8 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
+
   // EMPTY STATE
-  // ============================================================
 
   Widget _emptyState({
     required IconData icon,
@@ -1150,9 +1110,7 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // ============================================================
   // DATE FORMAT
-  // ============================================================
 
   String _formatDate(String? date) {
     if (date == null || date.isEmpty) {
@@ -1170,9 +1128,7 @@ class _FixState extends State<Fix> {
     }
   }
 
-  // ============================================================
   // GENERAL STATUS COLOR
-  // ============================================================
 
   Color _statusColor(String status) {
     switch (status.toLowerCase()) {
@@ -1239,11 +1195,6 @@ class _FixState extends State<Fix> {
 
 
 
-
-
-//{{url_production}}/support/bank_api/update_status/application
-// {{url_production}}/support/bank_api/update_info/application
-// {{url_production}}/support/bank_api/update_info/application
 
 
   Widget _buildDivider() {

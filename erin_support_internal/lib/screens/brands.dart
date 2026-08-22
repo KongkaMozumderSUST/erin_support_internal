@@ -24,15 +24,12 @@ class _BrandsState extends State<Brands> {
   String? customerId;
   String? mdmName;
 
-  // ============================================================
   // STATUS
-  // ============================================================
 
   String selectedStatus = '';
 
-  // ============================================================
   // MDM
-  // ============================================================
+
 
   late TextEditingController imei1Controller;
   late TextEditingController imei2Controller;
@@ -40,9 +37,7 @@ class _BrandsState extends State<Brands> {
   late TextEditingController mdmNameController;
 
 
-  // ============================================================
   // EMI
-  // ============================================================
 
   /*
    * This is the editable EMI list.
@@ -80,9 +75,9 @@ class _BrandsState extends State<Brands> {
     super.dispose();
   }
 
-  // ============================================================
+
   // INITIALIZE
-  // ============================================================
+
 
   Future<void> _initialize() async {
     final user = await Save.getUser();
@@ -105,24 +100,21 @@ class _BrandsState extends State<Brands> {
     customerId = data.applicationId;
 
 
-    // ==========================================================
+
     // STATUS
-    // ==========================================================
+
 
     selectedStatus = data.status ?? '';
 
-    // ==========================================================
     // MDM
-    // ==========================================================
 
     imei1Controller.text = data.mdmInfo?.imei1 ?? '';
     imei2Controller.text = data.mdmInfo?.imei2 ?? '';
     downPaymentController.text =
         data.mdmInfo?.downPayment ?? '';
 
-    // ==========================================================
+
     // EMI
-    // ==========================================================
 
     _prepareEmiList();
 
@@ -141,19 +133,19 @@ class _BrandsState extends State<Brands> {
       ),
     );
   }
-  // ============================================================
+
   // PREPARE EMI LIST
-  // ============================================================
+
 
   void _prepareEmiList() {
     final existingEmiInfo = customer?.emiInfo;
 
-    // ==========================================================
+
     // CASE 1:
     // emiInfo exists
     //
     // Use emiInfo completely.
-    // ==========================================================
+
 
     if (existingEmiInfo != null) {
       editableEmiList = existingEmiInfo.map((emi) {
@@ -170,7 +162,7 @@ class _BrandsState extends State<Brands> {
       return;
     }
 
-    // ==========================================================
+
     // CASE 2:
     // emiInfo is null
     //
@@ -178,7 +170,7 @@ class _BrandsState extends State<Brands> {
     //
     // Since there is no payment status yet,
     // default status = unpaid.
-    // ==========================================================
+
 
     final loanEmiSchedule =
         customer?.loanCreationDetails?.emischedule;
@@ -198,9 +190,8 @@ class _BrandsState extends State<Brands> {
     }).toList();
   }
 
-  // ============================================================
   // NORMALIZE EMI STATUS
-  // ============================================================
+
 
   String _normalizeEmiStatus(String? status) {
     if (status == null || status.trim().isEmpty) {
@@ -216,9 +207,8 @@ class _BrandsState extends State<Brands> {
     return 'unpaid';
   }
 
-  // ============================================================
+
   // LOGOUT
-  // ============================================================
 
   Future<void> _logout() async {
     await Save.clearUser();
@@ -233,9 +223,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // BUILD
-  // ============================================================
+
 
   @override
   Widget build(BuildContext context) {
@@ -251,9 +241,9 @@ class _BrandsState extends State<Brands> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
 
-      // ========================================================
+
       // APP BAR
-      // ========================================================
+
 
       appBar: AppBar(
         elevation: 0,
@@ -293,9 +283,9 @@ class _BrandsState extends State<Brands> {
         ],
       ),
 
-      // ========================================================
+
       // BODY
-      // ========================================================
+
 
       body: RefreshIndicator(
         onRefresh: _initialize,
@@ -326,9 +316,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // APPLICATION INFORMATION
-  // ============================================================
+
 
   Widget _buildApplicationCard() {
     return _card(
@@ -375,9 +365,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // STATUS CARD
-  // ============================================================
+
 
   Widget _buildStatusCard() {
     final currentStatus = customer?.status ?? 'N/A';
@@ -519,9 +509,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // STATUS DROPDOWN VALUE
-  // ============================================================
+
 
   String? _statusDropdownValue() {
     final value = selectedStatus.toLowerCase();
@@ -541,9 +531,9 @@ class _BrandsState extends State<Brands> {
     return null;
   }
 
-  // ============================================================
+
   // MDM CARD
-  // ============================================================
+
 
   Widget _buildMdmCard() {
     return _card(
@@ -596,9 +586,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // EMI CARD
-  // ============================================================
+
 
   Widget _buildEmiCard() {
     return _card(
@@ -661,9 +651,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // EMI ITEM
-  // ============================================================
+
 
   Widget _buildEmiItem({
     required int index,
@@ -688,9 +678,8 @@ class _BrandsState extends State<Brands> {
         crossAxisAlignment: CrossAxisAlignment.start,
 
         children: [
-          // ======================================================
+
           // HEADER
-          // ======================================================
 
           Row(
             children: [
@@ -724,9 +713,8 @@ class _BrandsState extends State<Brands> {
 
           const SizedBox(height: 16),
 
-          // ======================================================
+
           // DATE
-          // ======================================================
 
           _infoRow(
             label: 'Schedule Date',
@@ -737,9 +725,9 @@ class _BrandsState extends State<Brands> {
 
           const SizedBox(height: 12),
 
-          // ======================================================
+
           // AMOUNT
-          // ======================================================
+
 
           _infoRow(
             label: 'EMI Amount',
@@ -748,9 +736,9 @@ class _BrandsState extends State<Brands> {
 
           const SizedBox(height: 14),
 
-          // ======================================================
+
           // STATUS
-          // ======================================================
+
 
           const Text(
             'Payment Status',
@@ -796,9 +784,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // EMI STATUS BADGE
-  // ============================================================
+
 
   Widget _emiStatusBadge(String status) {
     final isPaid = status.toLowerCase() == 'paid';
@@ -830,9 +818,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // SHOW EMI PAYLOAD
-  // ============================================================
+
 
   void _showEmiPayload() async {
     await updateEmiInfo();
@@ -876,9 +864,8 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // EDITABLE FIELD
-  // ============================================================
 
   Widget _buildEditableField({
     required TextEditingController controller,
@@ -897,9 +884,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // CARD
-  // ============================================================
+
 
   Widget _card({
     required Widget child,
@@ -928,9 +915,8 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // SECTION HEADER
-  // ============================================================
 
   Widget _sectionHeader({
     required IconData icon,
@@ -968,9 +954,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // INFO ROW
-  // ============================================================
+
 
   Widget _infoRow({
     required String label,
@@ -1011,9 +997,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // INPUT DECORATION
-  // ============================================================
+
 
   InputDecoration _inputDecoration({
     required String hint,
@@ -1061,9 +1047,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // PRIMARY BUTTON
-  // ============================================================
+
 
   Widget _primaryButton({
     required IconData icon,
@@ -1101,9 +1087,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // EMPTY STATE
-  // ============================================================
+
 
   Widget _emptyState({
     required IconData icon,
@@ -1142,9 +1128,9 @@ class _BrandsState extends State<Brands> {
     );
   }
 
-  // ============================================================
+
   // DATE FORMAT
-  // ============================================================
+
 
   String _formatDate(String? date) {
     if (date == null || date.isEmpty) {
@@ -1162,9 +1148,8 @@ class _BrandsState extends State<Brands> {
     }
   }
 
-  // ============================================================
+
   // GENERAL STATUS COLOR
-  // ============================================================
 
   Color _statusColor(String status) {
     switch (status.toLowerCase()) {
