@@ -447,21 +447,3 @@ class _WaltonEmiPaymentPageState extends State<WaltonEmiPayment> {
   }
 }
 
-
-
-
-//{
-// "data": [
-// {
-// "customer_id": "214111",
-// "imei_1": "351406250347931",
-// "pos_invoice_number": "214111",
-// "payment_amount":   -4198,
-// "payment_date": "2026-07-20",
-// "total_due_amount": 4198,
-// "emi_status": 1,
-// "payment_type": "Bank",
-// "payment_description": "payment done from postman E"
-// }
-// ]
-// }

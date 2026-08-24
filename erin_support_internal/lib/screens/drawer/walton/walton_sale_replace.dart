@@ -19,6 +19,7 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
   late TextEditingController oldImei1Controller;
   late TextEditingController oldImei2Controller;
   late TextEditingController newImei1Controller;
+  late TextEditingController newImei2Controller;
   late TextEditingController newModelController;
 
   bool isLoading = false;
@@ -28,6 +29,7 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
   String? old_imei1;
   String? old_imei2;
   String? new_imei1;
+  String? new_imei2;
   String? new_model;
 
   @override
@@ -36,6 +38,7 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
    oldImei1Controller = TextEditingController();
     oldImei2Controller = TextEditingController();
     newImei1Controller = TextEditingController();
+    newImei2Controller = TextEditingController();
     newModelController = TextEditingController();
     _initialize();
   }
@@ -109,10 +112,10 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
     );
   }
   Future<void> waltonSaleReplace() async {
-    if (oldImei1Controller.text.trim().isEmpty && oldImei2Controller.text.trim().isEmpty && newImei1Controller.text.trim().isEmpty) {
+    if (oldImei1Controller.text.trim().isEmpty && oldImei2Controller.text.trim().isEmpty && newImei1Controller.text.trim().isEmpty&&newImei2Controller.text.trim().isEmpty&&newModelController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text("Installment amount and total due are required"),
+          content: const Text("Imei information incomplete"),
           backgroundColor: Colors.red.shade700,
           behavior: SnackBarBehavior.floating,
         ),
@@ -121,6 +124,9 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
     }
 
     setState(() {
+      new_imei1= newImei1Controller.text.trim();
+      new_imei2= newImei2Controller.text.trim();
+      new_model = newModelController.text.trim();
       isLoading = true;
     });
 
@@ -128,16 +134,18 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
     final body = jsonEncode({
         "mdm_name": "Walton MDM",
         "application_id": customerId,
-        "new_imei": new_imei1,
+        "new_imei_1": new_imei1,
+        "new_imei_2": new_imei2,
         "old_imei_1": old_imei1,
         "old_imei_2": old_imei2,
-        "new_model": "Orbit Y72",
+        "new_model": new_model,
         "reason" : "Kongka"
       }
       );
 
     final headers = {
       'Content-Type': 'application/json',
+      'Authorization': 'K9s8X7P0LwE3QzN2B=='
     };
 
     try {
@@ -151,7 +159,13 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
       print("Response: ${res.body}");
       if (res.statusCode == 200) {
         final json = jsonDecode(res.body);
-
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Sale Replace failed: ${res.statusCode}"),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
         if (json["status"] == true) {
           final data = json["data"];
           print(data);
@@ -164,7 +178,7 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Payment Update failed: ${res.statusCode}"),
+            content: Text("Sale Replace failed: ${res.statusCode}"),
             backgroundColor: Colors.red.shade700,
             behavior: SnackBarBehavior.floating,
           ),
@@ -277,7 +291,7 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
         children: [
           _sectionHeader(
             icon: Icons.phone_android_outlined,
-            title: 'Update Installment',
+            title: 'Update IMEI Information',
           ),
 
           const SizedBox(height: 18),
@@ -304,6 +318,13 @@ class _WaltonSaleReplacePageState extends State<WaltonSaleReplace> {
           _buildEditableField(
             controller: newImei1Controller,
             label: 'New Imei 1',
+            icon: Icons.payment_outlined,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 12),
+          _buildEditableField(
+            controller: newImei2Controller,
+            label: 'New Imei 2',
             icon: Icons.payment_outlined,
             keyboardType: TextInputType.number,
           ),
