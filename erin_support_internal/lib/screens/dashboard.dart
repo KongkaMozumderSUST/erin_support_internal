@@ -514,11 +514,11 @@ class _DashboardState extends State<Dashboard> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E3A8A), // Deep rich blue
+            color: const Color(0xFF000080), // Deep rich blue
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF1E3A8A).withOpacity(0.3),
+                color: const Color(0xFF000080).withOpacity(0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),

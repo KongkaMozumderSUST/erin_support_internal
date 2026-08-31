@@ -135,10 +135,10 @@
   onTap: (index) {
   setState(() {
   _currentIndex = index;
-  });
-  },
-  ),
-  );
+       });
+          },
+            ),
+       );
   },
   );
   }

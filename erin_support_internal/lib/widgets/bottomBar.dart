@@ -53,6 +53,12 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                 selectedIcon: Icons.shield,
                 label: "Fix",
               ),
+              _buildNavItem(
+                index: 3,
+                icon: Icons.shield_outlined,
+                selectedIcon: Icons.shield,
+                label: "PayProtect",
+              ),
             ],
           ),
         ),
