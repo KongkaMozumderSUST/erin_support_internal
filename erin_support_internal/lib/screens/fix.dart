@@ -243,7 +243,7 @@ class _FixState extends State<Fix> {
 
             const SizedBox(height: 16),
 
-            _buildStatusCard(),
+          //  _buildStatusCard(),
 
             const SizedBox(height: 16),
 
