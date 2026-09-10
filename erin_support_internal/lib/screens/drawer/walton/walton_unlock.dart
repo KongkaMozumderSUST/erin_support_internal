@@ -83,7 +83,7 @@ class _WaltonUnlockPageState extends State<WaltonUnlock> {
           children: [
             _sectionHeader(
               icon: Icons.person_outline,
-              title: 'Lock the Device',
+              title: 'Unlock the Device',
             ),
             SizedBox(height: 20,),
             _buildApplicationCard(),

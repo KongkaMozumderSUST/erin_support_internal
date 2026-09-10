@@ -135,6 +135,11 @@ class _SideBarState extends State<SideBar> {
                       title: 'Sale Replace',
                       index: 7,
                     ),
+                    _subMenuItem(
+                      icon: Icons.swap_horiz,
+                      title: 'Pay protect',
+                      index: 8,
+                    ),
                   ]),
 
                 const SizedBox(height: 6),
@@ -157,27 +162,27 @@ class _SideBarState extends State<SideBar> {
                     _subMenuItem(
                       icon: Icons.payments_outlined,
                       title: 'EMI Payment',
-                      index: 8,
+                      index: 9,
                     ),
                     _subMenuItem(
                       icon: Icons.access_time,
                       title: 'Allow Grace Period',
-                      index: 9,
+                      index: 10,
                     ),
                     _subMenuItem(
                       icon: Icons.lock_outline,
                       title: 'Lock',
-                      index: 10,
+                      index: 11,
                     ),
                     _subMenuItem(
                       icon: Icons.lock_open_outlined,
                       title: 'Unlock',
-                      index: 11,
+                      index: 12,
                     ),
                     _subMenuItem(
                       icon: Icons.swap_horiz,
                       title: 'Sale Replace',
-                      index: 12,
+                      index: 13,
                     ),
                   ]),
               ],
