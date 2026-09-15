@@ -225,9 +225,6 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
       );
     }
 
-    // --------------------------------------------------------
-    // No Record
-    // --------------------------------------------------------
 
     if (saleRecord == null) {
       return const Scaffold(
@@ -246,9 +243,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
 
     final data = saleRecord!;
 
-    // --------------------------------------------------------
-    // Main UI
-    // --------------------------------------------------------
+
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -306,9 +301,6 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Customer Information
-  // ==========================================================
 
   Widget _customerCard(SaleRecord data) {
     return _card(
@@ -345,9 +337,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Payment Information
-  // ==========================================================
+
 
   Widget _paymentCard(SaleRecord data) {
     return _card(
@@ -388,9 +378,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Device Information
-  // ==========================================================
+
 
   Widget _deviceCard(SaleRecord data) {
     return _card(
@@ -427,9 +415,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Device Status
-  // ==========================================================
+
 
   Widget _statusCard(SaleRecord data) {
     return _card(
@@ -445,7 +431,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
         _item(
           'Device Status',
           data.deviceStatus,
-          valueColor: const Color(0xFF059669),
+          valueColor: data.deviceStatus == "Lock"?  const Color(0xFFFF0000) : const Color(0xFF059669),
         ),
 
         _item(
@@ -470,9 +456,6 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Sale Information
-  // ==========================================================
 
   Widget _saleInfoCard(SaleRecord data) {
     return _card(
@@ -492,9 +475,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Location
-  // ==========================================================
+
 
   Widget _locationCard(SaleRecord data) {
     return _card(
@@ -515,9 +496,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Copyable Item
-  // ==========================================================
+
 
   Widget _copyItem({
     required String title,
@@ -555,7 +534,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
                     textAlign: TextAlign.right,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF0F172A),
                     ),
@@ -608,9 +587,7 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Normal Item
-  // ==========================================================
+
 
   Widget _item(
       String title,
@@ -657,9 +634,6 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
     );
   }
 
-  // ==========================================================
-  // Card
-  // ==========================================================
 
   Widget _card({
     required String title,

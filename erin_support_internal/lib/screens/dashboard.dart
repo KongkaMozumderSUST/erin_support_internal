@@ -64,20 +64,6 @@ class _DashboardState extends State<Dashboard> {
               // Overview Cards Row (Credit Score & Current Loan)
               Row(
                 children: [
-                  Expanded(
-                    child: _buildOverviewCard(
-                      title: "CREDIT SCORE",
-                      mainValue: creditScore?.finalScore?.toString() ?? 'N/A',
-                      subtitle: creditScore?.finalScore != null
-                          ? (creditScore!.finalScore! > 70
-                          ? 'Good'
-                          : creditScore.finalScore! > 50
-                          ? 'Fair'
-                          : 'Low')
-                          : 'N/A',
-                      progress: (creditScore?.finalScore ?? 0) / 100,
-                    ),
-                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: _buildOverviewCard(
@@ -85,9 +71,8 @@ class _DashboardState extends State<Dashboard> {
                       mainValue: product?.model ?? product?.phoneName ?? 'N/A',
                       subtitle:
                       "EMI: ${emiPayable?.monthlyAmount != null ? 'BDT ${emiPayable?.monthlyAmount}' : 'N/A'}",
-                      accountInfo: loanCreation?.loanaccno != null
-                          ? "Acc: ...${loanCreation!.loanaccno!.length > 4 ? loanCreation.loanaccno!.substring(loanCreation.loanaccno!.length - 4) : loanCreation.loanaccno}"
-                          : "Acc: N/A",
+                      accountInfo: loanCreation?.emicollectionAc != null
+                          ? "Acc: ${loanCreation?.emicollectionAc}" : "Acc: N/A",
                     ),
                   ),
                 ],
@@ -684,7 +669,7 @@ class _DashboardState extends State<Dashboard> {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
               color: Color(0xFF64748B),
               letterSpacing: 0.5,
@@ -705,7 +690,7 @@ class _DashboardState extends State<Dashboard> {
           Text(
             subtitle,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Color(0xFF2563EB),
             ),
@@ -725,7 +710,7 @@ class _DashboardState extends State<Dashboard> {
             Text(
               accountInfo,
               style: const TextStyle(
-                fontSize: 11,
+                fontSize: 13,
                 color: Color(0xFF94A3B8),
               ),
             ),

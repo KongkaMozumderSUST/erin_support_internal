@@ -17,6 +17,7 @@
  import 'package:erin_support_internal/screens/drawer/walton/walton_sale_replace.dart';
  import 'package:erin_support_internal/screens/drawer/walton/walton_grace_period.dart';
  import 'package:erin_support_internal/screens/drawer/walton/payprotect.dart';
+ import 'package:erin_support_internal/screens/drawer/zte/unlock_phone.dart';
 
  class Home extends StatefulWidget {
   const Home({super.key});
@@ -46,6 +47,9 @@
   const SymphonyLock(),
   const SymphonyUnlock(),
   const SymphonySaleReplace(),
+
+    //zte
+    const ZTEUnlock()
   ];
 
   @override

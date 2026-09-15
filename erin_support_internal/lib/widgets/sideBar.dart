@@ -19,6 +19,7 @@ class _SideBarState extends State<SideBar> {
 
   bool waltonExpanded = false;
   bool symphonyExpanded = false;
+  bool zteExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +186,26 @@ class _SideBarState extends State<SideBar> {
                       index: 13,
                     ),
                   ]),
+
+                _brandHeader(
+                  title: 'ZTE',
+                  icon: Icons.phone_android,
+                  expanded: zteExpanded,
+                  onTap: () {
+                    setState(() {
+                      zteExpanded = !zteExpanded;
+                    });
+                  },
+                ),
+                if (zteExpanded)
+                  _brandChildren([
+                    _subMenuItem(
+                      icon: Icons.swap_horiz,
+                      title: 'ZTE Unlock',
+                      index: 14,
+                    ),
+                  ]),
+
               ],
             ),
           ),

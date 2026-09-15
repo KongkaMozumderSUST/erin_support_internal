@@ -263,7 +263,7 @@ class _LoginPageState extends State<Login> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text("Something went wrong. Please check your network connection."),
+          content: const Text("Something went wrong or wrong customer id!"),
           backgroundColor: Colors.red.shade700,
           behavior: SnackBarBehavior.floating,
         ),
