@@ -55,6 +55,7 @@ class LoginData {
   final CustomerInfo? customerInfo;
   final LoanSimDetails? loanSimDetails;
   final Product? product;
+  final RmInformation? rmInformation;
 
   LoginData({
     this.id,
@@ -84,6 +85,7 @@ class LoginData {
     this.customerInfo,
     this.loanSimDetails,
     this.product,
+    this.rmInformation
   });
 
   factory LoginData.fromMap(Map<String, dynamic> json) {
@@ -119,17 +121,37 @@ class LoginData {
       bankId: json['bank_id']?.toString(),
       productId: json['product_id']?.toString(),
       emiId: json['emi_id']?.toString(),
+
       productSelectionInfo: parseNested(
-          json['product_selection_info'], ProductSelectionInfo.fromMap),
-      productInfo: parseNested(json['product_info'], ProductInfo.fromMap),
-      downPaymentInfo:
-      parseNested(json['down_payment_info'], DownPaymentInfo.fromMap),
-      emiPayableInfo:
-      parseNested(json['emi_payable_info'], EmiPayableInfo.fromMap),
-      creditScoreInfo:
-      parseNested(json['credit_score_info'], CreditScoreInfo.fromMap),
+        json['product_selection_info'],
+        ProductSelectionInfo.fromMap,
+      ),
+
+      productInfo: parseNested(
+        json['product_info'],
+        ProductInfo.fromMap,
+      ),
+
+      downPaymentInfo: parseNested(
+        json['down_payment_info'],
+        DownPaymentInfo.fromMap,
+      ),
+
+      emiPayableInfo: parseNested(
+        json['emi_payable_info'],
+        EmiPayableInfo.fromMap,
+      ),
+
+      creditScoreInfo: parseNested(
+        json['credit_score_info'],
+        CreditScoreInfo.fromMap,
+      ),
+
       loanCreationDetails: parseNested(
-          json['loan_creation_details'], LoanCreationDetails.fromMap),
+        json['loan_creation_details'],
+        LoanCreationDetails.fromMap,
+      ),
+
       workflow: json['workflow'],
       profee: json['profee']?.toString(),
       cib: json['cib']?.toString(),
@@ -137,13 +159,42 @@ class LoginData {
       status: json['status']?.toString(),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-      dmsInfo: parseNested(json['dms_info'], DmsInfo.fromMap),
-      mdmInfo: parseNested(json['mdm_info'], MdmInfo.fromMap),
-      emiInfo: parseList(json['emi_info'], EmiInfo.fromMap),
-      customerInfo: parseNested(json['customer_info'], CustomerInfo.fromMap),
-      loanSimDetails:
-      parseNested(json['loan_sim_details'], LoanSimDetails.fromMap),
-      product: parseNested(json['product'], Product.fromMap),
+
+      dmsInfo: parseNested(
+        json['dms_info'],
+        DmsInfo.fromMap,
+      ),
+
+      mdmInfo: parseNested(
+        json['mdm_info'],
+        MdmInfo.fromMap,
+      ),
+
+      emiInfo: parseList(
+        json['emi_info'],
+        EmiInfo.fromMap,
+      ),
+
+      customerInfo: parseNested(
+        json['customer_info'],
+        CustomerInfo.fromMap,
+      ),
+
+      loanSimDetails: parseNested(
+        json['loan_sim_details'],
+        LoanSimDetails.fromMap,
+      ),
+
+      product: parseNested(
+        json['product'],
+        Product.fromMap,
+      ),
+
+      // IMPORTANT
+      rmInformation: parseNested(
+        json['rm_information'],
+        RmInformation.fromMap,
+      ),
     );
   }
 
@@ -164,6 +215,7 @@ class LoginData {
       'status': status,
       'created_at': createdAt,
       'updated_at': updatedAt,
+
       'customer_info': customerInfo?.toMap(),
       'dms_info': dmsInfo?.toMap(),
       'mdm_info': mdmInfo?.toMap(),
@@ -176,6 +228,8 @@ class LoginData {
       'loan_creation_details': loanCreationDetails?.toMap(),
       'loan_sim_details': loanSimDetails?.toMap(),
       'emi_info': emiInfo?.map((e) => e.toMap()).toList(),
+      // IMPORTANT
+      'rm_information': rmInformation?.toMap(),
     };
   }
 }
@@ -951,6 +1005,84 @@ class ProductInfo {
       'description': description,
       'category_id': categoryId,
       'file': file?.map((e) => e.toMap()).toList(),
+    };
+  }
+}
+class RmInformation {
+  final String? isSelf;
+  final String? isDhakaBank;
+  final String? isAssisted;
+  final String? dblEmployeeId;
+  final String? employeeName;
+  final String? employeeMobileNumber;
+  final String? assistedMobileNumber;
+  final String? assistedOrganizationName;
+  final String? assistedDmsId;
+  final String? assistedDmsAddress;
+  final String? assistedDmsName;
+  final String? assistedName;
+
+  RmInformation({
+    this.isSelf,
+    this.isDhakaBank,
+    this.isAssisted,
+    this.dblEmployeeId,
+    this.employeeName,
+    this.employeeMobileNumber,
+    this.assistedMobileNumber,
+    this.assistedOrganizationName,
+    this.assistedDmsId,
+    this.assistedDmsAddress,
+    this.assistedDmsName,
+    this.assistedName,
+  });
+
+  factory RmInformation.fromMap(Map<String, dynamic> json) {
+    return RmInformation(
+      isSelf: json['isSelf']?.toString(),
+      isDhakaBank: json['isDhakaBank']?.toString(),
+      isAssisted: json['isAssisted']?.toString(),
+
+      dblEmployeeId: json['dbl_employee_id']?.toString(),
+      employeeName: json['employee_name']?.toString(),
+      employeeMobileNumber:
+      json['employee_mobile_number']?.toString(),
+
+      assistedMobileNumber:
+      json['assisted_mobile_number']?.toString(),
+
+      assistedOrganizationName:
+      json['assisted_organization_name']?.toString(),
+
+      assistedDmsId:
+      json['assisted_dms_id']?.toString(),
+
+      assistedDmsAddress:
+      json['assisted_dms_address']?.toString(),
+
+      assistedDmsName:
+      json['assisted_dms_name']?.toString(),
+
+      // API key has TWO underscores
+      assistedName:
+      json['assisted__name']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'isSelf': isSelf,
+      'isDhakaBank': isDhakaBank,
+      'isAssisted': isAssisted,
+      'dbl_employee_id': dblEmployeeId,
+      'employee_name': employeeName,
+      'employee_mobile_number': employeeMobileNumber,
+      'assisted_mobile_number': assistedMobileNumber,
+      'assisted_organization_name': assistedOrganizationName,
+      'assisted_dms_id': assistedDmsId,
+      'assisted_dms_address': assistedDmsAddress,
+      'assisted_dms_name': assistedDmsName,
+      'assisted__name': assistedName,
     };
   }
 }

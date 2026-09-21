@@ -236,7 +236,7 @@ class _WaltonEmiPaymentPageState extends State<WaltonEmiPayment> {
                       ),
                       const SizedBox(width: 12),
                       const Text(
-                        'Confirm MDM Update',
+                        'Confirm Payment',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -245,7 +245,7 @@ class _WaltonEmiPaymentPageState extends State<WaltonEmiPayment> {
                     ],
                   ),
                   content: const Text(
-                    'Are you sure you want to update the MDM information?',
+                    'Are you sure you want to update the payment information?',
                     style: TextStyle(
                       fontSize: 15,
                       color: Color(0xFF64748B),

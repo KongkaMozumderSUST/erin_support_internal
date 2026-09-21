@@ -4,6 +4,7 @@ import 'package:erin_support_internal/others/save.dart';
 import 'package:erin_support_internal/screens/auth/login.dart';
 import 'package:erin_support_internal/widgets/bottomBar.dart';
 import 'package:erin_support_internal/screens/balance.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -53,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
           final loanCreation = data.loanCreationDetails;
           final loanSchedule = data.loanCreationDetails?.emischedule;
           final emiSchedules = data.emiInfo;
+          final rmInfo = data.rmInformation;
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -246,6 +248,7 @@ class _DashboardState extends State<Dashboard> {
                   letterSpacing: 0.8,
                 ),
               ),
+
               const SizedBox(height: 12),
               Container(
                 decoration: BoxDecoration(
@@ -343,7 +346,7 @@ class _DashboardState extends State<Dashboard> {
                       subtitle: customer?.phone ?? 'View personal profile info',
                       onTap: () {
                         _showDetailsBottomSheet("Customer Information", [
-                          _buildRow("Phone", customer?.phone),
+                          _buildPhoneRow("Phone", customer?.phone),
                           _buildRow("Email", customer?.email),
                           _buildRow("Father's Name", customer?.fatherName),
                           _buildRow("Mother's Name", customer?.motherName),
@@ -354,6 +357,74 @@ class _DashboardState extends State<Dashboard> {
                           _buildRow("Religion", customer?.religion),
                           _buildRow("Have Children", customer?.haveChildren),
                         ]);
+                      },
+                    ),
+
+                    _buildDivider(),
+                    _buildPreferenceTile(
+                      icon: Icons.support_agent_outlined,
+                      title: "Retailer Information",
+                      subtitle: rmInfo?.isAssisted == "true"
+                          ? "Assisted by ${rmInfo?.assistedName ?? 'N/A'}"
+                          : "View relationship manager information",
+                      onTap: () {
+                        _showDetailsBottomSheet(
+                          "Retailer Information",
+                          [
+                            _buildRow(
+                              "Self",
+                              rmInfo?.isSelf,
+                            ),
+                            _buildRow(
+                              "Dhaka Bank",
+                              rmInfo?.isDhakaBank,
+                            ),
+                            _buildRow(
+                              "Assisted",
+                              rmInfo?.isAssisted,
+                            ),
+                            _buildDivider(),
+
+                            _buildRow(
+                              "Employee ID",
+                              rmInfo?.dblEmployeeId,
+                            ),
+                            _buildRow(
+                              "Employee Name",
+                              rmInfo?.employeeName,
+                            ),
+                            _buildPhoneRow(
+                              "Employee Mobile",
+                              rmInfo?.employeeMobileNumber,
+                            ),
+                            _buildDivider(),
+
+                            _buildRow(
+                              "Assisted Name",
+                              rmInfo?.assistedName,
+                            ),
+                            _buildPhoneRow(
+                              "Assisted Mobile",
+                              rmInfo?.assistedMobileNumber,
+                            ),
+                            _buildRow(
+                              "Organization",
+                              rmInfo?.assistedOrganizationName,
+                            ),
+                            _buildRow(
+                              "DMS ID",
+                              rmInfo?.assistedDmsId,
+                            ),
+                            _buildRow(
+                              "DMS Name",
+                              rmInfo?.assistedDmsName,
+                            ),
+                            _buildRow(
+                              "DMS Address",
+                              rmInfo?.assistedDmsAddress,
+                            ),
+                          ],
+                        );
                       },
                     ),
                     _buildDivider(),
@@ -420,6 +491,57 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Future<void> _openWhatsApp(String? phone) async {
+    if (phone == null || phone.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("No phone number available"),
+        ),
+      );
+      return;
+    }
+
+    // Remove spaces, +, -, brackets, etc.
+    String number = phone.replaceAll(RegExp(r'[^\d]'), '');
+
+    // Bangladesh number handling
+    // 017XXXXXXXX -> 88017XXXXXXXXS
+    if (number.startsWith('01') && number.length == 11) {
+      number = '88$number';
+    }
+
+    // // 88017XXXXXXXX is already correct
+    // if (!number.startsWith('880') && number.startsWith('17')) {
+    //   number = '880$number';
+    // }
+
+    final Uri whatsappUrl = Uri.parse(
+      'https://wa.me/$number',
+    );
+
+    try {
+      final launched = await launchUrl(
+        whatsappUrl,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!launched && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Could not open WhatsApp"),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Could not open WhatsApp: $e"),
+          ),
+        );
+      }
+    }
+  }
   void _showDetailsBottomSheet(String title, List<Widget> children) {
     showModalBottomSheet(
       context: context,
@@ -477,29 +599,94 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
-  Widget _buildProfileHeader(
-      CustomerInfo? customer, String? profee, String cib, String tcsa, String? status) {
+  Widget _buildPhoneRow(String label, String? value) {
+    final hasPhone = value != null && value.trim().isNotEmpty;
 
-    bool isProfeeTrue = profee?.toLowerCase() == 'true' || profee == '1';
-    bool isCibTrue = cib.toLowerCase() == 'true' || cib == '1';
-    bool isTcsaTrue = tcsa.toLowerCase() == 'true' || tcsa == '1';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF64748B),
+                fontSize: 13,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: InkWell(
+              onTap: hasPhone
+                  ? () => _openWhatsApp(value)
+                  : null,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      hasPhone ? value! : 'N/A',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: hasPhone
+                            ? const Color(0xFF16A34A)
+                            : const Color(0xFF0F172A),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  if (hasPhone)
+                    const Icon(
+                      Icons.chat,
+                      size: 17,
+                      color: Color(0xFF16A34A),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildProfileHeader(
+      CustomerInfo? customer,
+      String? profee,
+      String cib,
+      String tcsa,
+      String? status,
+      ) {
+    final bool isProfeeTrue =
+        profee?.toLowerCase() == 'true' || profee == '1';
+
+    final bool isCibTrue =
+        cib.toLowerCase() == 'true' || cib == '1';
+
+    final bool isTcsaTrue =
+        tcsa.toLowerCase() == 'true' || tcsa == '1';
 
     Color getStatusColor(bool value) {
       return value ? Colors.green.shade700 : Colors.red.shade700;
     }
 
+    final bool hasPhone =
+        customer?.phone != null && customer!.phone!.trim().isNotEmpty;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top Sub-header text matching the design
-
         const SizedBox(height: 2),
 
-        // Main Blue Card Container
+        // ==============================
+        // CUSTOMER HEADER CARD
+        // ==============================
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF000080), // Deep rich blue
+            color: const Color(0xFF000080),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -512,32 +699,40 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Row: Title + Visibility Icon
 
-              // Amount & Percentage Row
-              const SizedBox(height: 16),
-
-              // Customer Info Sub-section inside the Card
+              // ==============================
+              // CUSTOMER INFORMATION
+              // ==============================
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: Row(
                   children: [
+                    // Profile Image
                     CircleAvatar(
-                      radius: 20,
+                      radius: 24,
                       backgroundColor: Colors.white,
                       backgroundImage:
-                      (customer?.image != null && customer!.image!.isNotEmpty)
+                      (customer?.image != null &&
+                          customer!.image!.isNotEmpty)
                           ? NetworkImage(customer.image!)
                           : null,
-                      child: (customer?.image == null || customer!.image!.isEmpty)
-                          ? const Icon(Icons.person, size: 20, color: Color(0xFF1E3A8A))
+                      child: (customer?.image == null ||
+                          customer!.image!.isEmpty)
+                          ? const Icon(
+                        Icons.person,
+                        size: 24,
+                        color: Color(0xFF1E3A8A),
+                      )
                           : null,
                     ),
+
                     const SizedBox(width: 12),
+
+                    // Name + Status
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,31 +741,84 @@ class _DashboardState extends State<Dashboard> {
                             customer?.name ?? 'Unknown Customer',
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            "Status: ${status ?? '0'} • ${ customer?.phone ?? 'No Contact'}",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 11,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
+
+                          const SizedBox(height: 4),
+
+                          Text(
+                            "Status: ${status ?? '0'}",
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11,
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          // Phone number
+                          Text(
+                            customer?.phone ?? 'No Contact',
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11,
+                            ),
+                          ),
                         ],
                       ),
                     ),
+
+                    // ==============================
+                    // WHATSAPP BUTTON
+                    // ==============================
+                    if (hasPhone)
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => _openWhatsApp(customer!.phone),
+                          borderRadius: BorderRadius.circular(14),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF25D366),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.chat,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                                SizedBox(height: 3),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
+
               const SizedBox(height: 16),
 
-              // Profee, CIB, TCSA Pills inside the White Overlay Container
+              // ==============================
+              // STATUS SECTION
+              // ==============================
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
@@ -584,14 +832,26 @@ class _DashboardState extends State<Dashboard> {
                       isTrue: isProfeeTrue,
                       color: getStatusColor(isProfeeTrue),
                     ),
-                    Container(height: 20, width: 1, color: Colors.grey.shade200),
+
+                    Container(
+                      height: 20,
+                      width: 1,
+                      color: Colors.grey.shade200,
+                    ),
+
                     _buildStatusPill(
                       label: "CIB",
                       statusText: cib,
                       isTrue: isCibTrue,
                       color: getStatusColor(isCibTrue),
                     ),
-                    Container(height: 20, width: 1, color: Colors.grey.shade200),
+
+                    Container(
+                      height: 20,
+                      width: 1,
+                      color: Colors.grey.shade200,
+                    ),
+
                     _buildStatusPill(
                       label: "TCSA",
                       statusText: tcsa,
@@ -601,8 +861,8 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
 
+              const SizedBox(height: 4),
             ],
           ),
         ),

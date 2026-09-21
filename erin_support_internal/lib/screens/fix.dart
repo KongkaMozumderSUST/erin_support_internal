@@ -1380,7 +1380,7 @@ class _FixState extends State<Fix> {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
 
-        if (json["status"] == true) {
+        if (json["success"] == true) {
           final data = json["data"];
           print(data);
           setState(() {
@@ -1481,7 +1481,7 @@ class _FixState extends State<Fix> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        if (responseData['status'] == true) {
+        if (responseData["success"] == true) {
           if (!mounted) return;
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1581,7 +1581,7 @@ class _FixState extends State<Fix> {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
 
-        if (json['status'] == true) {
+        if (json["success"] == true) {
           if (!mounted) return;
 
           ScaffoldMessenger.of(context).showSnackBar(

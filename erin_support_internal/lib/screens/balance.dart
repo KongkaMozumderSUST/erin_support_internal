@@ -199,9 +199,7 @@ class _BalanceState extends State<Balance> {
         );
       }
 
-      // ============================================================
-      // 3. EMI PAYMENTS
-      // ============================================================
+
 
       final resLoanBalanceStatus = await http.post(
         loanAccUrl,

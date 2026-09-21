@@ -376,6 +376,9 @@ class _ZTEUnlockState extends State<ZTEUnlock> {
 
       final body = jsonEncode({
         'imei': imei1,
+        'lockInfoList': [
+          {'type': 'LOCK_PHONE'},
+        ],
       });
 
       final signString =

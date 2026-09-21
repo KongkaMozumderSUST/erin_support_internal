@@ -4,10 +4,14 @@ class SideBar extends StatefulWidget {
   final int currentIndex;
   final ValueChanged<int> onItemSelected;
 
+  // Brand from productSelectionInfo.brand.name
+  final String? brandName;
+
   const SideBar({
     super.key,
     required this.currentIndex,
     required this.onItemSelected,
+    required this.brandName,
   });
 
   @override
@@ -21,6 +25,16 @@ class _SideBarState extends State<SideBar> {
   bool symphonyExpanded = false;
   bool zteExpanded = false;
 
+  String get brand {
+    return widget.brandName?.trim().toLowerCase() ?? '';
+  }
+
+  bool get isWalton => brand.contains('walton');
+
+  bool get isSymphony => brand.contains('helio');
+
+  bool get isZte => brand.contains('nubia');
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,6 +44,7 @@ class _SideBarState extends State<SideBar> {
         children: [
           // HEADER
           const SizedBox(height: 50),
+
           Container(
             height: 80,
             padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -51,7 +66,7 @@ class _SideBarState extends State<SideBar> {
                 const SizedBox(width: 12),
 
                 const Text(
-                  'Erin Support',
+                  'eRin Support',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -72,21 +87,21 @@ class _SideBarState extends State<SideBar> {
             child: ListView(
               padding: const EdgeInsets.all(10),
               children: [
-                // Dashboard
+                // DASHBOARD
                 _menuItem(
                   icon: Icons.dashboard_outlined,
                   title: 'Dashboard',
                   index: 0,
                 ),
 
-                // Balance
+                // BALANCE
                 _menuItem(
                   icon: Icons.account_balance_wallet_outlined,
                   title: 'Balance',
                   index: 1,
                 ),
 
-                // Fix
+                // FIX
                 _menuItem(
                   icon: Icons.build_outlined,
                   title: 'Fix',
@@ -95,123 +110,137 @@ class _SideBarState extends State<SideBar> {
 
                 const SizedBox(height: 10),
 
-
+                // =========================================================
                 // WALTON
+                // =========================================================
 
-                _brandHeader(
-                  title: 'Walton',
-                  icon: Icons.phone_android,
-                  expanded: waltonExpanded,
-                  onTap: () {
-                    setState(() {
-                      waltonExpanded = !waltonExpanded;
-                    });
-                  },
-                ),
+                if (isWalton) ...[
+                  _brandHeader(
+                    title: 'Walton',
+                    icon: Icons.phone_android,
+                    expanded: waltonExpanded,
+                    onTap: () {
+                      setState(() {
+                        waltonExpanded = !waltonExpanded;
+                      });
+                    },
+                  ),
 
-                if (waltonExpanded)
-                  _brandChildren([
-                    _subMenuItem(
-                      icon: Icons.payments_outlined,
-                      title: 'EMI Payment',
-                      index: 3,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.access_time,
-                      title: 'Allow Grace Period',
-                      index: 4,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.lock_outline,
-                      title: 'Lock',
-                      index: 5,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.lock_open_outlined,
-                      title: 'Unlock',
-                      index: 6,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.swap_horiz,
-                      title: 'Sale Replace',
-                      index: 7,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.swap_horiz,
-                      title: 'Pay protect',
-                      index: 8,
-                    ),
-                  ]),
+                  if (waltonExpanded)
+                    _brandChildren([
+                      _subMenuItem(
+                        icon: Icons.payments_outlined,
+                        title: 'EMI Payment',
+                        index: 3,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.access_time,
+                        title: 'Allow Grace Period',
+                        index: 4,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.lock_outline,
+                        title: 'Lock',
+                        index: 5,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.lock_open_outlined,
+                        title: 'Unlock',
+                        index: 6,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.swap_horiz,
+                        title: 'Sale Replace',
+                        index: 7,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.swap_horiz,
+                        title: 'Pay protect',
+                        index: 8,
+                      ),
+                    ]),
 
-                const SizedBox(height: 6),
+                  const SizedBox(height: 6),
+                ],
 
+                // =========================================================
                 // SYMPHONY
+                // =========================================================
 
-                _brandHeader(
-                  title: 'Symphony',
-                  icon: Icons.phone_android,
-                  expanded: symphonyExpanded,
-                  onTap: () {
-                    setState(() {
-                      symphonyExpanded = !symphonyExpanded;
-                    });
-                  },
-                ),
+                if (isSymphony) ...[
+                  _brandHeader(
+                    title: 'Symphony',
+                    icon: Icons.phone_android,
+                    expanded: symphonyExpanded,
+                    onTap: () {
+                      setState(() {
+                        symphonyExpanded = !symphonyExpanded;
+                      });
+                    },
+                  ),
 
-                if (symphonyExpanded)
-                  _brandChildren([
-                    _subMenuItem(
-                      icon: Icons.payments_outlined,
-                      title: 'EMI Payment',
-                      index: 9,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.access_time,
-                      title: 'Allow Grace Period',
-                      index: 10,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.lock_outline,
-                      title: 'Lock',
-                      index: 11,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.lock_open_outlined,
-                      title: 'Unlock',
-                      index: 12,
-                    ),
-                    _subMenuItem(
-                      icon: Icons.swap_horiz,
-                      title: 'Sale Replace',
-                      index: 13,
-                    ),
-                  ]),
+                  if (symphonyExpanded)
+                    _brandChildren([
+                      _subMenuItem(
+                        icon: Icons.payments_outlined,
+                        title: 'EMI Payment',
+                        index: 9,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.access_time,
+                        title: 'Allow Grace Period',
+                        index: 10,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.lock_outline,
+                        title: 'Lock',
+                        index: 11,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.lock_open_outlined,
+                        title: 'Unlock',
+                        index: 12,
+                      ),
+                      _subMenuItem(
+                        icon: Icons.swap_horiz,
+                        title: 'Sale Replace',
+                        index: 13,
+                      ),
+                    ]),
 
-                _brandHeader(
-                  title: 'ZTE',
-                  icon: Icons.phone_android,
-                  expanded: zteExpanded,
-                  onTap: () {
-                    setState(() {
-                      zteExpanded = !zteExpanded;
-                    });
-                  },
-                ),
-                if (zteExpanded)
-                  _brandChildren([
-                    _subMenuItem(
-                      icon: Icons.swap_horiz,
-                      title: 'ZTE Unlock',
-                      index: 14,
-                    ),
-                  ]),
+                  const SizedBox(height: 6),
+                ],
 
+                // =========================================================
+                // ZTE
+                // =========================================================
+
+                if (isZte) ...[
+                  _brandHeader(
+                    title: 'ZTE',
+                    icon: Icons.phone_android,
+                    expanded: zteExpanded,
+                    onTap: () {
+                      setState(() {
+                        zteExpanded = !zteExpanded;
+                      });
+                    },
+                  ),
+
+                  if (zteExpanded)
+                    _brandChildren([
+                      _subMenuItem(
+                        icon: Icons.lock_open_outlined,
+                        title: 'ZTE Unlock',
+                        index: 14,
+                      ),
+                    ]),
+                ],
               ],
             ),
           ),
 
           // USER
-
           const Divider(
             color: Colors.white24,
           ),
@@ -257,9 +286,9 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-
+  // =========================================================
   // BRAND HEADER
-
+  // =========================================================
 
   Widget _brandHeader({
     required String title,
@@ -318,7 +347,9 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
+  // =========================================================
   // BRAND CHILDREN
+  // =========================================================
 
   Widget _brandChildren(List<Widget> children) {
     return Container(
@@ -344,8 +375,9 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-
+  // =========================================================
   // MAIN MENU
+  // =========================================================
 
   Widget _menuItem({
     required IconData icon,
@@ -402,8 +434,9 @@ class _SideBarState extends State<SideBar> {
     );
   }
 
-
+  // =========================================================
   // SUB MENU
+  // =========================================================
 
   Widget _subMenuItem({
     required IconData icon,
