@@ -88,7 +88,7 @@ class _WaltonUnlockPageState extends State<WaltonUnlock> {
             SizedBox(height: 20,),
             _buildApplicationCard(),
             SizedBox(height: 20,),
-            _buildPaymentCard()
+            _unlockWalton()
           ],
         ),
       ),
@@ -251,7 +251,7 @@ class _WaltonUnlockPageState extends State<WaltonUnlock> {
       ),
     );
   }
-  Widget _buildPaymentCard() {
+  Widget _unlockWalton() {
     return _card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,7 +277,85 @@ class _WaltonUnlockPageState extends State<WaltonUnlock> {
           _primaryButton(
             icon: Icons.save_outlined,
             text: 'Unlock the Walton Device',
-            onPressed: lockDevice,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                  title: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.lock_open,
+                          color: Color(0xFFD50000),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Unlock the phone',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  content: const Text(
+                    'Do you want to unlock phone?',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF64748B),
+                      height: 1.5,
+                    ),
+                  ),
+                  actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Color(0xFF64748B),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD50000),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 22,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                       _unlockWalton();
+                      },
+                      child: const Text(
+                        'Unlock Phone',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

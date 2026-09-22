@@ -8,8 +8,6 @@ import 'package:erin_support_internal/others/save.dart';
 import 'package:erin_support_internal/models/CustomerModel.dart';
 
 
-
-
 class SymphonyLock extends StatefulWidget {
   const SymphonyLock({super.key});
 
@@ -85,7 +83,7 @@ class _SymphonyLockPageState extends State<SymphonyLock> {
           children: [
             _sectionHeader(
               icon: Icons.person_outline,
-              title: 'Lock the device',
+              title: 'Lock the helio device',
             ),
             SizedBox(height: 20,),
             _buildApplicationCard(),
@@ -96,7 +94,7 @@ class _SymphonyLockPageState extends State<SymphonyLock> {
       ),
     );
   }
-  Future<void> unlockDevice() async {
+  Future<void> lockDevice() async {
     if (Imei1Controller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -253,7 +251,7 @@ class _SymphonyLockPageState extends State<SymphonyLock> {
         children: [
           _sectionHeader(
             icon: Icons.phone_android_outlined,
-            title: 'Lock the device',
+            title: 'Lock the helio device',
           ),
 
           const SizedBox(height: 18),
@@ -270,9 +268,87 @@ class _SymphonyLockPageState extends State<SymphonyLock> {
           const SizedBox(height: 12),
 
           _primaryButton(
-            icon: Icons.save_outlined,
-            text: 'Unlock Device',
-            onPressed: unlockDevice,
+            icon: Icons.lock,
+            text: 'Lock Device',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                  title: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.lock,
+                          color: Color(0xFFD50000),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Lock the phone',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  content: const Text(
+                    'Do you want to lock phone?',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF64748B),
+                      height: 1.5,
+                    ),
+                  ),
+                  actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Color(0xFF64748B),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD50000),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 22,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        lockDevice();
+                      },
+                      child: const Text(
+                        'Lock Phone',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),
