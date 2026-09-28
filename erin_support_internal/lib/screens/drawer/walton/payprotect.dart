@@ -259,6 +259,8 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
 
           child: Column(
             children: [
+              _statusCard(data),
+              const SizedBox(height: 16),
               _customerCard(data),
 
               const SizedBox(height: 16),
@@ -268,10 +270,6 @@ class _SaleRecordScreenState extends State<SaleRecordScreen> {
               const SizedBox(height: 16),
 
               _deviceCard(data),
-
-              const SizedBox(height: 16),
-
-              _statusCard(data),
 
               const SizedBox(height: 16),
 

@@ -480,9 +480,10 @@ class _BalanceState extends State<Balance> {
 
                     const SizedBox(height: 24),
 
-                    // =================================================
-                    // EMI SCHEDULE
-                    // =================================================
+
+// =================================================
+// EMI SCHEDULE
+// =================================================
 
                     const Text(
                       "EMI Schedule",
@@ -497,161 +498,172 @@ class _BalanceState extends State<Balance> {
                     const SizedBox(height: 12),
 
                     Container(
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: const Color(0xFFE2E8F0),
                         ),
                       ),
-
                       child: emiPayments.isEmpty
                           ? const Padding(
-                        padding:
-                        EdgeInsets.all(24),
+                        padding: EdgeInsets.all(24),
                         child: Center(
                           child: Text(
                             "No EMI schedule found",
                             style: TextStyle(
-                              color:
-                              Color(0xFF64748B),
+                              color: Color(0xFF64748B),
                             ),
                           ),
                         ),
                       )
-                          : ListView.separated(
-                        shrinkWrap: true,
-
-                        physics:
-                        const NeverScrollableScrollPhysics(),
-
-                        itemCount:
-                        emiPayments.length,
-
-                        separatorBuilder:
-                            (_, __) =>
-                            _buildDivider(),
-
-                        itemBuilder:
-                            (context, index) {
-                          final emi =
-                          emiPayments[index];
-
-                          final now =
-                          DateTime.now();
-
-                          final isPaid =
-                              emi.totSettled >=
-                                  emi.emiAmt;
-
-                          final isUpcoming =
-                          emi.scheduleDueDate
-                              .isAfter(now);
-
-                          IconData statusIcon;
-
-                          Color statusColor;
-
-                          if (isPaid) {
-                            statusIcon =
-                                Icons.check_circle;
-
-                            statusColor =
-                                Colors.green;
-                          } else if (isUpcoming) {
-                            statusIcon =
-                                Icons.schedule;
-
-                            statusColor =
-                                Colors.orange;
-                          } else {
-                            statusIcon =
-                                Icons
-                                    .warning_amber_rounded;
-
-                            statusColor =
-                                Colors.red;
-                          }
-
-                          return ListTile(
-                            contentPadding:
-                            const EdgeInsets
-                                .symmetric(
-                              horizontal: 16,
-                              vertical: 8,
+                          : ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              minWidth: 850,
                             ),
+                            child: Table(
+                              defaultVerticalAlignment:
+                              TableCellVerticalAlignment.middle,
 
-                            leading:
-                            CircleAvatar(
-                              backgroundColor:
-                              statusColor
-                                  .withOpacity(.1),
+                              columnWidths: const {
+                                0: FixedColumnWidth(70),
+                                1: FixedColumnWidth(100),
+                                2: FixedColumnWidth(130),
+                                3: FixedColumnWidth(130),
+                                4: FixedColumnWidth(130),
+                                5: FixedColumnWidth(130),
+                                6: FixedColumnWidth(130),
+                              },
 
-                              child: Icon(
-                                Icons
-                                    .calendar_month_outlined,
-                                color:
-                                statusColor,
+                              border: const TableBorder(
+                                horizontalInside: BorderSide(
+                                  color: Color(0xFFE2E8F0),
+                                  width: 1,
+                                ),
                               ),
-                            ),
 
-                            title: Text(
-                              "EMI #${emi.scheduleNo}",
-                              style:
-                              const TextStyle(
-                                fontWeight:
-                                FontWeight.w600,
-                              ),
-                            ),
-
-                            subtitle: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment
-                                  .start,
                               children: [
-                                const SizedBox(
-                                  height: 4,
-                                ),
+                                // ==========================================
+                                // HEADER
+                                // ==========================================
 
-                                Text(
-                                  "Due Date: "
-                                      "${emi.scheduleDueDate.day}/"
-                                      "${emi.scheduleDueDate.month}/"
-                                      "${emi.scheduleDueDate.year}",
-                                ),
-
-                                Text(
-                                  "Amount: "
-                                      "৳${emi.emiAmt.toStringAsFixed(2)}",
-                                ),
-
-                                Text(
-                                  "Settled: "
-                                      "৳${emi.totSettled.toStringAsFixed(2)}",
-                                ),
-
-                                Text(
-                                  "Over Due: "
-                                      "৳${emi.totOverDue.toStringAsFixed(2)}",
-
-                                  style: TextStyle(
-                                    color:
-                                    statusColor,
-                                    fontWeight:
-                                    FontWeight.w500,
+                                TableRow(
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFF8FAFC),
                                   ),
+                                  children: [
+                                    _buildEmiTableHeader("EMI"),
+                                    _buildEmiTableHeader("Schedule"),
+                                    _buildEmiTableHeader("Due Date"),
+                                    _buildEmiTableHeader("Amount"),
+                                    _buildEmiTableHeader("Settled"),
+                                    _buildEmiTableHeader("Over Due"),
+                                    _buildEmiTableHeader("Status"),
+                                  ],
                                 ),
+
+                                // ==========================================
+                                // DATA
+                                // ==========================================
+
+                                ...emiPayments.map((emi) {
+                                  final now = DateTime.now();
+
+                                  final isPaid =
+                                      emi.totSettled >= emi.emiAmt;
+
+                                  final isUpcoming =
+                                  emi.scheduleDueDate.isAfter(now);
+
+                                  IconData statusIcon;
+                                  Color statusColor;
+                                  String statusText;
+
+                                  if (isPaid) {
+                                    statusIcon = Icons.check_circle;
+                                    statusColor = Colors.green;
+                                    statusText = "Paid";
+                                  } else if (isUpcoming) {
+                                    statusIcon = Icons.schedule;
+                                    statusColor = Colors.orange;
+                                    statusText = "Upcoming";
+                                  } else {
+                                    statusIcon =
+                                        Icons.warning_amber_rounded;
+                                    statusColor = Colors.red;
+                                    statusText = "Overdue";
+                                  }
+
+                                  return TableRow(
+                                    children: [
+                                      _buildEmiTableCell(
+                                        "${emi.scheduleNo}",
+                                        fontWeight: FontWeight.w600,
+                                      ),
+
+                                      _buildEmiTableCell(
+                                        "EMI #${emi.scheduleNo}",
+                                      ),
+
+                                      _buildEmiTableCell(
+                                        "${emi.scheduleDueDate.day}/"
+                                            "${emi.scheduleDueDate.month}/"
+                                            "${emi.scheduleDueDate.year}",
+                                      ),
+
+                                      _buildEmiTableCell(
+                                        "৳${emi.emiAmt.toStringAsFixed(2)}",
+                                      ),
+
+                                      _buildEmiTableCell(
+                                        "৳${emi.totSettled.toStringAsFixed(2)}",
+                                      ),
+
+                                      _buildEmiTableCell(
+                                        "৳${emi.totOverDue.toStringAsFixed(2)}",
+                                        color: statusColor,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 14,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              statusIcon,
+                                              color: statusColor,
+                                              size: 20,
+                                            ),
+
+                                            const SizedBox(width: 6),
+
+                                            Text(
+                                              statusText,
+                                              style: TextStyle(
+                                                color: statusColor,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }),
                               ],
                             ),
-
-                            trailing: Icon(
-                              statusIcon,
-                              color: statusColor,
-                              size: 28,
-                            ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
                     ),
 
@@ -693,7 +705,43 @@ class _BalanceState extends State<Balance> {
     );
   }
 
+  Widget _buildEmiTableHeader(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 14,
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Color(0xFF475569),
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
 
+  Widget _buildEmiTableCell(
+      String text, {
+        Color? color,
+        FontWeight? fontWeight,
+      }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 14,
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: color ?? const Color(0xFF0F172A),
+          fontSize: 13,
+          fontWeight: fontWeight ?? FontWeight.normal,
+        ),
+      ),
+    );
+  }
   Widget _buildPreferenceTile({
     required IconData icon,
     required String title,
@@ -777,11 +825,6 @@ class _BalanceState extends State<Balance> {
                 ),
               ),
 
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 14,
-                color: Color(0xFF94A3B8),
-              ),
             ],
           ),
         ),

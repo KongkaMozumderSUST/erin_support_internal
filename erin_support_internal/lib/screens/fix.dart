@@ -622,20 +622,19 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // EMI CARD
+
 
   Widget _buildEmiCard() {
     return _card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
           _sectionHeader(
             icon: Icons.receipt_long_outlined,
             title: 'EMI Information',
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
 
           if (editableEmiList.isEmpty)
             _emptyState(
@@ -644,37 +643,94 @@ class _FixState extends State<Fix> {
             )
           else
             Column(
-              children: [
-                ...editableEmiList.asMap().entries.map(
-                      (entry) {
-                    final index = entry.key;
-                    final emi = entry.value;
+              children: editableEmiList.asMap().entries.map((entry) {
+                final index = entry.key;
+                final emi = entry.value;
 
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom:
-                        index == editableEmiList.length - 1
-                            ? 0
-                            : 12,
-                      ),
+                final status = emi['status'] ?? 'unpaid';
+                final isPaid = status.toLowerCase() == 'paid';
 
-                      child: _buildEmiItem(
-                        index: index,
-                        emi: emi,
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.grey.shade200,
+                    ),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+
+                    // EMI NUMBER
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.blue.shade50,
+                      child: Text(
+                        emi['scheduleNumber'] ?? '',
+                        style: const TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ],
+                    ),
+
+                    // DATE
+                    title: Text(
+                      'Date: ${_formatDate(emi['scheduleDate'])}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+
+                    // AMOUNT
+                    subtitle: Text(
+                      'Amount: ৳ ${emi['emiAmount'] ?? 'N/A'}',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 13,
+                      ),
+                    ),
+
+                    // PAID / UNPAID DROPDOWN
+                    trailing: DropdownButton<String>(
+                      value: isPaid ? 'paid' : 'unpaid',
+                      underline: const SizedBox(),
+
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'paid',
+                          child: Text('Paid'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'unpaid',
+                          child: Text('Unpaid'),
+                        ),
+                      ],
+
+                      onChanged: (value) {
+                        if (value == null) return;
+
+                        setState(() {
+                          editableEmiList[index]['status'] = value;
+                        });
+                      },
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
 
+          // UPDATE BUTTON
           if (editableEmiList.isNotEmpty) ...[
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
 
             _primaryButton(
               icon: Icons.save_outlined,
               text: 'Update EMI Information',
-
               onPressed: () {
                 showDialog(
                   context: context,
@@ -682,7 +738,13 @@ class _FixState extends State<Fix> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                    contentPadding: const EdgeInsets.fromLTRB(
+                      24,
+                      24,
+                      24,
+                      16,
+                    ),
+
                     title: Row(
                       children: [
                         Container(
@@ -696,16 +758,21 @@ class _FixState extends State<Fix> {
                             color: Color(0xFF059669),
                           ),
                         ),
+
                         const SizedBox(width: 12),
-                        const Text(
-                          'Confirm EMI Update',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
+
+                        const Expanded(
+                          child: Text(
+                            'Confirm EMI Update',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ],
                     ),
+
                     content: const Text(
                       'Are you sure you want to update the EMI information?',
                       style: TextStyle(
@@ -714,7 +781,14 @@ class _FixState extends State<Fix> {
                         height: 1.5,
                       ),
                     ),
-                    actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+
+                    actionsPadding: const EdgeInsets.fromLTRB(
+                      24,
+                      0,
+                      24,
+                      20,
+                    ),
+
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
@@ -726,6 +800,7 @@ class _FixState extends State<Fix> {
                           ),
                         ),
                       ),
+
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF059669),
@@ -739,10 +814,12 @@ class _FixState extends State<Fix> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+
                         onPressed: () {
                           Navigator.pop(context);
                           updateEmiInfo();
                         },
+
                         child: const Text(
                           'Confirm',
                           style: TextStyle(
@@ -761,135 +838,276 @@ class _FixState extends State<Fix> {
     );
   }
 
-  // EMI ITEM
-
-  Widget _buildEmiItem({
-    required int index,
-    required Map<String, String> emi,
-  }) {
-    final status = emi['status'] ?? 'unpaid';
-
-    final isPaid = status.toLowerCase() == 'paid';
-
-    return Container(
-      padding: const EdgeInsets.all(14),
-
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE2E8F0),
-        ),
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-
-          // HEADER
-
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8EAF6),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-
-                child: Text(
-                  'EMI #${emi['scheduleNumber']}',
-
-                  style: const TextStyle(
-                    color: Color(0xFF1A237E),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-
-              const Spacer(),
-
-              _emiStatusBadge(status),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // DATE
-
-          _infoRow(
-            label: 'Schedule Date',
-            value: _formatDate(
-              emi['scheduleDate'],
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // AMOUNT
 
 
-          _infoRow(
-            label: 'EMI Amount',
-            value: '৳ ${emi['emiAmount'] ?? ''}',
-          ),
-
-          const SizedBox(height: 14),
-
-          // STATUS
-
-          const Text(
-            'Payment Status',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF64748B),
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          DropdownButtonFormField<String>(
-            value: isPaid ? 'paid' : 'unpaid',
-
-            decoration: _inputDecoration(
-              hint: 'Select payment status',
-              icon: Icons.payment_outlined,
-            ),
-
-            items: const [
-              DropdownMenuItem(
-                value: 'paid',
-                child: Text('Paid'),
-              ),
-
-              DropdownMenuItem(
-                value: 'unpaid',
-                child: Text('Unpaid'),
-              ),
-            ],
-
-            onChanged: (value) {
-              if (value == null) return;
-
-              setState(() {
-                editableEmiList[index]['status'] = value;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  // EMI STATUS BADGE
+  // // EMI CARD
+  //
+  // Widget _buildEmiCard() {
+  //   return _card(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //
+  //       children: [
+  //         _sectionHeader(
+  //           icon: Icons.receipt_long_outlined,
+  //           title: 'EMI Information',
+  //         ),
+  //
+  //         const SizedBox(height: 18),
+  //
+  //         if (editableEmiList.isEmpty)
+  //           _emptyState(
+  //             icon: Icons.receipt_long_outlined,
+  //             text: 'No EMI information available',
+  //           )
+  //         else
+  //           Column(
+  //             children: [
+  //               ...editableEmiList.asMap().entries.map(
+  //                     (entry) {
+  //                   final index = entry.key;
+  //                   final emi = entry.value;
+  //
+  //                   return Padding(
+  //                     padding: EdgeInsets.only(
+  //                       bottom:
+  //                       index == editableEmiList.length - 1
+  //                           ? 0
+  //                           : 12,
+  //                     ),
+  //
+  //                     child: _buildEmiItem(
+  //                       index: index,
+  //                       emi: emi,
+  //                     ),
+  //                   );
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //
+  //         if (editableEmiList.isNotEmpty) ...[
+  //           const SizedBox(height: 18),
+  //
+  //           _primaryButton(
+  //             icon: Icons.save_outlined,
+  //             text: 'Update EMI Information',
+  //
+  //             onPressed: () {
+  //               showDialog(
+  //                 context: context,
+  //                 builder: (context) => AlertDialog(
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(20),
+  //                   ),
+  //                   contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+  //                   title: Row(
+  //                     children: [
+  //                       Container(
+  //                         padding: const EdgeInsets.all(10),
+  //                         decoration: BoxDecoration(
+  //                           color: const Color(0xFFE8F7F0),
+  //                           borderRadius: BorderRadius.circular(12),
+  //                         ),
+  //                         child: const Icon(
+  //                           Icons.save_outlined,
+  //                           color: Color(0xFF059669),
+  //                         ),
+  //                       ),
+  //                       const SizedBox(width: 12),
+  //                       const Text(
+  //                         'Confirm EMI Update',
+  //                         style: TextStyle(
+  //                           fontSize: 20,
+  //                           fontWeight: FontWeight.w700,
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   content: const Text(
+  //                     'Are you sure you want to update the EMI information?',
+  //                     style: TextStyle(
+  //                       fontSize: 15,
+  //                       color: Color(0xFF64748B),
+  //                       height: 1.5,
+  //                     ),
+  //                   ),
+  //                   actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+  //                   actions: [
+  //                     TextButton(
+  //                       onPressed: () => Navigator.pop(context),
+  //                       child: const Text(
+  //                         'Cancel',
+  //                         style: TextStyle(
+  //                           color: Color(0xFF64748B),
+  //                           fontWeight: FontWeight.w600,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     ElevatedButton(
+  //                       style: ElevatedButton.styleFrom(
+  //                         backgroundColor: const Color(0xFF059669),
+  //                         foregroundColor: Colors.white,
+  //                         elevation: 0,
+  //                         padding: const EdgeInsets.symmetric(
+  //                           horizontal: 22,
+  //                           vertical: 12,
+  //                         ),
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(10),
+  //                         ),
+  //                       ),
+  //                       onPressed: () {
+  //                         Navigator.pop(context);
+  //                         updateEmiInfo();
+  //                       },
+  //                       child: const Text(
+  //                         'Confirm',
+  //                         style: TextStyle(
+  //                           fontWeight: FontWeight.w600,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               );
+  //             },
+  //           ),
+  //         ],
+  //       ],
+  //     ),
+  //   );
+  // }
+  //
+  // // EMI ITEM
+  //
+  // Widget _buildEmiItem({
+  //   required int index,
+  //   required Map<String, String> emi,
+  // }) {
+  //   final status = emi['status'] ?? 'unpaid';
+  //
+  //   final isPaid = status.toLowerCase() == 'paid';
+  //
+  //   return Container(
+  //     padding: const EdgeInsets.all(14),
+  //
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFFF8FAFC),
+  //       borderRadius: BorderRadius.circular(12),
+  //       border: Border.all(
+  //         color: const Color(0xFFE2E8F0),
+  //       ),
+  //     ),
+  //
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //
+  //       children: [
+  //
+  //         // HEADER
+  //
+  //         Row(
+  //           children: [
+  //             Container(
+  //               padding: const EdgeInsets.symmetric(
+  //                 horizontal: 10,
+  //                 vertical: 6,
+  //               ),
+  //
+  //               decoration: BoxDecoration(
+  //                 color: const Color(0xFFE8EAF6),
+  //                 borderRadius: BorderRadius.circular(8),
+  //               ),
+  //
+  //               child: Text(
+  //                 'EMI #${emi['scheduleNumber']}',
+  //
+  //                 style: const TextStyle(
+  //                   color: Color(0xFF1A237E),
+  //                   fontWeight: FontWeight.bold,
+  //                   fontSize: 13,
+  //                 ),
+  //               ),
+  //             ),
+  //
+  //             const Spacer(),
+  //
+  //             _emiStatusBadge(status),
+  //           ],
+  //         ),
+  //
+  //         const SizedBox(height: 16),
+  //
+  //         // DATE
+  //
+  //         _infoRow(
+  //           label: 'Schedule Date',
+  //           value: _formatDate(
+  //             emi['scheduleDate'],
+  //           ),
+  //         ),
+  //
+  //         const SizedBox(height: 12),
+  //
+  //         // AMOUNT
+  //
+  //
+  //         _infoRow(
+  //           label: 'EMI Amount',
+  //           value: '৳ ${emi['emiAmount'] ?? ''}',
+  //         ),
+  //
+  //         const SizedBox(height: 14),
+  //
+  //         // STATUS
+  //
+  //         const Text(
+  //           'Payment Status',
+  //           style: TextStyle(
+  //             fontSize: 12,
+  //             fontWeight: FontWeight.w600,
+  //             color: Color(0xFF64748B),
+  //           ),
+  //         ),
+  //
+  //         const SizedBox(height: 8),
+  //
+  //         DropdownButtonFormField<String>(
+  //           value: isPaid ? 'paid' : 'unpaid',
+  //
+  //           decoration: _inputDecoration(
+  //             hint: 'Select payment status',
+  //             icon: Icons.payment_outlined,
+  //           ),
+  //
+  //           items: const [
+  //             DropdownMenuItem(
+  //               value: 'paid',
+  //               child: Text('Paid'),
+  //             ),
+  //
+  //             DropdownMenuItem(
+  //               value: 'unpaid',
+  //               child: Text('Unpaid'),
+  //             ),
+  //           ],
+  //
+  //           onChanged: (value) {
+  //             if (value == null) return;
+  //
+  //             setState(() {
+  //               editableEmiList[index]['status'] = value;
+  //             });
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+  //
+  //
+  // // EMI STATUS BADGE
 
 
   Widget _emiStatusBadge(String status) {

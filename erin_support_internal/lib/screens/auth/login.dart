@@ -99,6 +99,13 @@ class _LoginPageState extends State<Login> {
                       TextField(
                         controller: customerIdController,
                         keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+
+                        onSubmitted: (_) {
+                          if (!isLoading) {
+                            login();
+                          }
+                        },
                         style: const TextStyle(fontWeight: FontWeight.w500),
                         decoration: InputDecoration(
                           labelText: "Customer ID",
