@@ -147,11 +147,6 @@ class _SideBarState extends State<SideBar> {
                         title: 'Pay protect',
                         index: 8,
                       ),
-                      _subMenuItem(
-                        icon: Icons.lock_open_outlined,
-                        title: 'Release',
-                        index: 9,
-                      ),
                     ]),
 
                   const SizedBox(height: 6),
@@ -177,27 +172,27 @@ class _SideBarState extends State<SideBar> {
                       _subMenuItem(
                         icon: Icons.payments_outlined,
                         title: 'EMI Payment',
-                        index: 10,
+                        index: 9,
                       ),
                       _subMenuItem(
                         icon: Icons.access_time,
                         title: 'Allow Grace Period',
-                        index: 11,
+                        index: 10,
                       ),
                       _subMenuItem(
                         icon: Icons.lock_outline,
                         title: 'Lock',
-                        index: 12,
+                        index: 11,
                       ),
                       _subMenuItem(
                         icon: Icons.lock_open_outlined,
                         title: 'Unlock',
-                        index: 13,
+                        index: 12,
                       ),
                       _subMenuItem(
                         icon: Icons.swap_horiz,
                         title: 'Sale Replace',
-                        index: 14,
+                        index: 13,
                       ),
                     ]),
 
@@ -224,7 +219,7 @@ class _SideBarState extends State<SideBar> {
                       _subMenuItem(
                         icon: Icons.lock_open_outlined,
                         title: 'ZTE Unlock',
-                        index: 15,
+                        index: 14,
                       ),
                     ]),
                 ],

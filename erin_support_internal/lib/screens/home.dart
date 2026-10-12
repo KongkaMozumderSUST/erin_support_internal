@@ -24,7 +24,6 @@ import 'package:erin_support_internal/screens/drawer/walton/walton_unlock.dart';
 import 'package:erin_support_internal/screens/drawer/walton/walton_sale_replace.dart';
 import 'package:erin_support_internal/screens/drawer/walton/walton_grace_period.dart';
 import 'package:erin_support_internal/screens/drawer/walton/payprotect.dart';
-import 'package:erin_support_internal/screens/drawer/walton/walton_release.dart';
 
 // ZTE
 import 'package:erin_support_internal/screens/drawer/zte/unlock_phone.dart';
@@ -53,7 +52,6 @@ class _HomeState extends State<Home> {
     const WaltonUnlock(),
     const WaltonSaleReplace(),
     const SaleRecordScreen(),
-    const WaltonRelease(),
 
     // Symphony
     const SymphonyEmiPayment(),
