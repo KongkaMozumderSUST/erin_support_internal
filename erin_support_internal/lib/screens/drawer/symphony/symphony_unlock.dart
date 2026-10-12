@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:erin_support_internal/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:erin_support_internal/others/save.dart';
 import 'package:erin_support_internal/models/CustomerModel.dart';
-
-
-
 
 class SymphonyUnlock extends StatefulWidget {
   const SymphonyUnlock({super.key});
@@ -18,7 +14,6 @@ class SymphonyUnlock extends StatefulWidget {
 }
 
 class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
-
   late TextEditingController Imei1Controller;
   bool isLoading = false;
   LoginData? customer;
@@ -32,7 +27,6 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
     _initialize();
   }
 
-
   Future<void> _initialize() async {
     final user = await Save.getUser();
     if (!mounted) return;
@@ -41,17 +35,15 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
         isLoading = false;
       });
       return;
-    }
-    else {
+    } else {
       setState(() {
         final data = user!.data!;
         customer = data;
         token = user.token;
-        old_imei1 =  data.mdmInfo?.imei1;
+        old_imei1 = data.mdmInfo?.imei1;
         Imei1Controller.text = old_imei1!;
       });
     }
-
   }
 
   @override
@@ -60,15 +52,12 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(
         backgroundColor: Color(0xFFF8FAFC),
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -85,15 +74,16 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
               icon: Icons.person_outline,
               title: 'Unlock the device',
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             _buildApplicationCard(),
-            SizedBox(height: 20,),
-            _buildPaymentCard()
+            SizedBox(height: 20),
+            _buildPaymentCard(),
           ],
         ),
       ),
     );
   }
+
   Future<void> unlockDevice() async {
     if (Imei1Controller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -110,19 +100,17 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       isLoading = true;
     });
 
-    final url = Uri.parse('$SymphonyURL/api/lock-device-by-seller?imei=$old_imei1');
-
+    final url = Uri.parse(
+      '$SymphonyURL/api/unlock-device-by-seller?imei=$old_imei1',
+    );
 
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'iF3PTw5zRSMTAyMTY=7JdKeu2ULE3A=='
+      'Authorization': 'iF3PTw5zRSMTAyMTY=7JdKeu2ULE3A==',
     };
 
     try {
-      final res = await http.post(
-        url,
-        headers: headers,
-      );
+      final res = await http.post(url, headers: headers);
 
       print("Status Code: ${res.statusCode}");
       print("Response: ${res.body}");
@@ -136,8 +124,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
             isLoading = false;
           });
         }
-      }
-      else {
+      } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -166,10 +153,8 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       }
     }
   }
-  Widget _sectionHeader({
-    required IconData icon,
-    required String title,
-  }) {
+
+  Widget _sectionHeader({required IconData icon, required String title}) {
     return Row(
       children: [
         Container(
@@ -179,11 +164,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
             borderRadius: BorderRadius.circular(9),
           ),
 
-          child: Icon(
-            icon,
-            color: const Color(0xFF1A237E),
-            size: 20,
-          ),
+          child: Icon(icon, color: const Color(0xFF1A237E), size: 20),
         ),
 
         const SizedBox(width: 10),
@@ -199,18 +180,15 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       ],
     );
   }
-  Widget _card({
-    required Widget child,
-  }) {
+
+  Widget _card({required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
 
-        border: Border.all(
-          color: const Color(0xFFE2E8F0),
-        ),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
 
         boxShadow: [
           BoxShadow(
@@ -224,6 +202,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       child: child,
     );
   }
+
   Widget _buildApplicationCard() {
     return _card(
       child: Column(
@@ -234,16 +213,13 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
             value: customer?.applicationId ?? 'N/A',
           ),
           const SizedBox(height: 18),
-          _infoRow(
-            label: 'Imei 1',
-            value: old_imei1 ?? 'N/A',
-          ),
+          _infoRow(label: 'Imei 1', value: old_imei1 ?? 'N/A'),
           const SizedBox(height: 12),
-
         ],
       ),
     );
   }
+
   Widget _buildPaymentCard() {
     return _card(
       child: Column(
@@ -255,7 +231,6 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
           ),
 
           const SizedBox(height: 18),
-
 
           // IMEI 1
           _buildEditableField(
@@ -340,9 +315,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
                       },
                       child: const Text(
                         'Unlock Phone',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -354,6 +327,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       ),
     );
   }
+
   InputDecoration _inputDecoration({
     required String hint,
     required IconData icon,
@@ -361,49 +335,32 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
     return InputDecoration(
       hintText: hint,
 
-      prefixIcon: Icon(
-        icon,
-        size: 20,
-        color: const Color(0xFF64748B),
-      ),
+      prefixIcon: Icon(icon, size: 20, color: const Color(0xFF64748B)),
 
       filled: true,
 
       fillColor: const Color(0xFFF8FAFC),
 
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 14,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
 
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(
-          color: Color(0xFFE2E8F0),
-        ),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
 
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(
-          color: Color(0xFFE2E8F0),
-        ),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
 
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(
-          color: Color(0xFF1A237E),
-          width: 1.5,
-        ),
+        borderSide: const BorderSide(color: Color(0xFF1A237E), width: 1.5),
       ),
     );
   }
 
-  Widget _infoRow({
-    required String label,
-    required String value,
-  }) {
+  Widget _infoRow({required String label, required String value}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -438,6 +395,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       ],
     );
   }
+
   Widget _primaryButton({
     required IconData icon,
     required String text,
@@ -448,22 +406,17 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       child: ElevatedButton.icon(
         onPressed: onPressed,
 
-        icon: Icon(
-          icon,
-          size: 18,
-        ),
+        icon: Icon(icon, size: 18),
 
         label: Text(text),
 
         style: ElevatedButton.styleFrom(
-          backgroundColor:  const Color(0xFF000080),
+          backgroundColor: const Color(0xFF000080),
           foregroundColor: Colors.white,
 
           elevation: 0,
 
-          padding: const EdgeInsets.symmetric(
-            vertical: 14,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 14),
 
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -472,6 +425,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       ),
     );
   }
+
   Widget _buildEditableField({
     required TextEditingController controller,
     required String label,
@@ -482,11 +436,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
       controller: controller,
       keyboardType: keyboardType,
 
-      decoration: _inputDecoration(
-        hint: label,
-        icon: icon,
-      ),
+      decoration: _inputDecoration(hint: label, icon: icon),
     );
   }
 }
-

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:erin_support_internal/constants/api_constants.dart';
@@ -343,7 +342,7 @@ class _WaltonLockPageState extends State<WaltonLock> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                       _lockWalton();
+                        lockDevice();
                       },
                       child: const Text(
                         'Lock Phone',
@@ -496,4 +495,3 @@ class _WaltonLockPageState extends State<WaltonLock> {
     );
   }
 }
-

@@ -57,10 +57,7 @@ class _SideBarState extends State<SideBar> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
-                    Icons.apps,
-                    color: navy,
-                  ),
+                  child: const Icon(Icons.apps, color: navy),
                 ),
 
                 const SizedBox(width: 12),
@@ -77,10 +74,7 @@ class _SideBarState extends State<SideBar> {
             ),
           ),
 
-          const Divider(
-            color: Colors.white24,
-            height: 1,
-          ),
+          const Divider(color: Colors.white24, height: 1),
 
           // MENU
           Expanded(
@@ -102,18 +96,13 @@ class _SideBarState extends State<SideBar> {
                 ),
 
                 // FIX
-                _menuItem(
-                  icon: Icons.build_outlined,
-                  title: 'Fix',
-                  index: 2,
-                ),
+                _menuItem(icon: Icons.build_outlined, title: 'Fix', index: 2),
 
                 const SizedBox(height: 10),
 
                 // =========================================================
                 // WALTON
                 // =========================================================
-
                 if (isWalton) ...[
                   _brandHeader(
                     title: 'Walton',
@@ -158,6 +147,11 @@ class _SideBarState extends State<SideBar> {
                         title: 'Pay protect',
                         index: 8,
                       ),
+                      _subMenuItem(
+                        icon: Icons.lock_open_outlined,
+                        title: 'Release',
+                        index: 9,
+                      ),
                     ]),
 
                   const SizedBox(height: 6),
@@ -166,7 +160,6 @@ class _SideBarState extends State<SideBar> {
                 // =========================================================
                 // SYMPHONY
                 // =========================================================
-
                 if (isSymphony) ...[
                   _brandHeader(
                     title: 'Symphony',
@@ -184,27 +177,27 @@ class _SideBarState extends State<SideBar> {
                       _subMenuItem(
                         icon: Icons.payments_outlined,
                         title: 'EMI Payment',
-                        index: 9,
+                        index: 10,
                       ),
                       _subMenuItem(
                         icon: Icons.access_time,
                         title: 'Allow Grace Period',
-                        index: 10,
+                        index: 11,
                       ),
                       _subMenuItem(
                         icon: Icons.lock_outline,
                         title: 'Lock',
-                        index: 11,
+                        index: 12,
                       ),
                       _subMenuItem(
                         icon: Icons.lock_open_outlined,
                         title: 'Unlock',
-                        index: 12,
+                        index: 13,
                       ),
                       _subMenuItem(
                         icon: Icons.swap_horiz,
                         title: 'Sale Replace',
-                        index: 13,
+                        index: 14,
                       ),
                     ]),
 
@@ -214,7 +207,6 @@ class _SideBarState extends State<SideBar> {
                 // =========================================================
                 // ZTE
                 // =========================================================
-
                 if (isZte) ...[
                   _brandHeader(
                     title: 'ZTE',
@@ -232,7 +224,7 @@ class _SideBarState extends State<SideBar> {
                       _subMenuItem(
                         icon: Icons.lock_open_outlined,
                         title: 'ZTE Unlock',
-                        index: 14,
+                        index: 15,
                       ),
                     ]),
                 ],
@@ -241,9 +233,7 @@ class _SideBarState extends State<SideBar> {
           ),
 
           // USER
-          const Divider(
-            color: Colors.white24,
-          ),
+          const Divider(color: Colors.white24),
 
           const Padding(
             padding: EdgeInsets.all(15),
@@ -251,10 +241,7 @@ class _SideBarState extends State<SideBar> {
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    color: navy,
-                  ),
+                  child: Icon(Icons.person, color: navy),
                 ),
 
                 SizedBox(width: 10),
@@ -271,10 +258,7 @@ class _SideBarState extends State<SideBar> {
                     ),
                     Text(
                       'Administrator',
-                      style: TextStyle(
-                        color: Colors.white60,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white60, fontSize: 12),
                     ),
                   ],
                 ),
@@ -297,25 +281,16 @@ class _SideBarState extends State<SideBar> {
     required VoidCallback onTap,
   }) {
     return Material(
-      color: expanded
-          ? Colors.white.withOpacity(0.08)
-          : Colors.transparent,
+      color: expanded ? Colors.white.withOpacity(0.08) : Colors.transparent,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 13,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: Colors.white,
-                size: 21,
-              ),
+              Icon(icon, color: Colors.white, size: 21),
 
               const SizedBox(width: 13),
 
@@ -332,9 +307,7 @@ class _SideBarState extends State<SideBar> {
 
               AnimatedRotation(
                 turns: expanded ? 0.5 : 0,
-                duration: const Duration(
-                  milliseconds: 200,
-                ),
+                duration: const Duration(milliseconds: 200),
                 child: const Icon(
                   Icons.keyboard_arrow_down,
                   color: Colors.white70,
@@ -353,25 +326,12 @@ class _SideBarState extends State<SideBar> {
 
   Widget _brandChildren(List<Widget> children) {
     return Container(
-      margin: const EdgeInsets.only(
-        left: 15,
-        top: 4,
-        bottom: 5,
-      ),
-      padding: const EdgeInsets.only(
-        left: 8,
-      ),
+      margin: const EdgeInsets.only(left: 15, top: 4, bottom: 5),
+      padding: const EdgeInsets.only(left: 8),
       decoration: const BoxDecoration(
-        border: Border(
-          left: BorderSide(
-            color: Colors.white24,
-            width: 1,
-          ),
-        ),
+        border: Border(left: BorderSide(color: Colors.white24, width: 1)),
       ),
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 
@@ -389,9 +349,7 @@ class _SideBarState extends State<SideBar> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Material(
-        color: selected
-            ? Colors.white
-            : Colors.transparent,
+        color: selected ? Colors.white : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
@@ -399,31 +357,18 @@ class _SideBarState extends State<SideBar> {
             widget.onItemSelected(index);
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 13,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  size: 21,
-                  color: selected
-                      ? navy
-                      : Colors.white70,
-                ),
+                Icon(icon, size: 21, color: selected ? navy : Colors.white70),
 
                 const SizedBox(width: 13),
 
                 Text(
                   title,
                   style: TextStyle(
-                    color: selected
-                        ? navy
-                        : Colors.white70,
-                    fontWeight: selected
-                        ? FontWeight.w600
-                        : FontWeight.normal,
+                    color: selected ? navy : Colors.white70,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
               ],
@@ -448,9 +393,7 @@ class _SideBarState extends State<SideBar> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 3),
       child: Material(
-        color: selected
-            ? Colors.white
-            : Colors.transparent,
+        color: selected ? Colors.white : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
@@ -458,19 +401,10 @@ class _SideBarState extends State<SideBar> {
             widget.onItemSelected(index);
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  size: 18,
-                  color: selected
-                      ? navy
-                      : Colors.white60,
-                ),
+                Icon(icon, size: 18, color: selected ? navy : Colors.white60),
 
                 const SizedBox(width: 12),
 
@@ -478,9 +412,7 @@ class _SideBarState extends State<SideBar> {
                   child: Text(
                     title,
                     style: TextStyle(
-                      color: selected
-                          ? navy
-                          : Colors.white70,
+                      color: selected ? navy : Colors.white70,
                       fontSize: 13.5,
                       fontWeight: selected
                           ? FontWeight.w600
