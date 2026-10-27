@@ -155,7 +155,7 @@ class _LoginPageState extends State<Login> {
                         child: ElevatedButton(
                           onPressed: isLoading ? null : login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF000080),
+                            backgroundColor: const Color(0xFF155dfc),
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(

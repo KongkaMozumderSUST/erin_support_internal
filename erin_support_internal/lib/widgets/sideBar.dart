@@ -19,7 +19,7 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  static const Color navy = Color(0xFF000080);
+  static const Color navy = Color(0xFF155dfc);
 
   bool waltonExpanded = false;
   bool symphonyExpanded = false;

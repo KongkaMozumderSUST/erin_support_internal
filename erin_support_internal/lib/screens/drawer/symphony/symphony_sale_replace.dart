@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'dart:async';
 import 'dart:convert';
 import 'package:erin_support_internal/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +13,6 @@ class SymphonySaleReplace extends StatefulWidget {
 }
 
 class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
-
   late TextEditingController oldImei1Controller;
   late TextEditingController oldImei2Controller;
   late TextEditingController newImei1Controller;
@@ -44,7 +41,6 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
     _initialize();
   }
 
-
   Future<void> _initialize() async {
     final user = await Save.getUser();
     if (!mounted) return;
@@ -53,20 +49,18 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
         isLoading = false;
       });
       return;
-    }
-    else {
+    } else {
       setState(() {
         final data = user!.data!;
         customer = data;
         token = user.token;
         customerId = data.applicationId;
-        old_imei1 =  data.mdmInfo?.imei1;
-        old_imei2  = data.mdmInfo?.imei2;
-        oldImei1Controller.text = old_imei1!;
-        oldImei2Controller.text = old_imei2!;
+        old_imei1 = data.mdmInfo?.imei1;
+        old_imei2 = data.mdmInfo?.imei2;
+        oldImei1Controller.text = old_imei1 ?? '';
+        oldImei2Controller.text = old_imei2 ?? '';
       });
     }
-
   }
 
   @override
@@ -75,18 +69,16 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
     oldImei2Controller.dispose();
     newImei1Controller.dispose();
     newModelController.dispose();
+    oldModelController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(
         backgroundColor: Color(0xFFF8FAFC),
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -103,20 +95,29 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
               icon: Icons.person_outline,
               title: 'Payment Update Information',
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             _buildApplicationCard(),
-            SizedBox(height: 20,),
-            _buildPaymentCard()
+            SizedBox(height: 20),
+            _buildPaymentCard(),
           ],
         ),
       ),
     );
   }
+
   Future<void> SaleReplace() async {
-    if (oldImei1Controller.text.trim().isEmpty && oldImei2Controller.text.trim().isEmpty && newImei1Controller.text.trim().isEmpty && oldModelController.text.trim().isEmpty) {
+    final oldImei1 = oldImei1Controller.text.trim();
+    final oldImei2 = oldImei2Controller.text.trim();
+    final newImei1 = newImei1Controller.text.trim();
+    final oldModel = oldModelController.text.trim();
+    final newModel = newModelController.text.trim();
+
+    if (newImei1.isEmpty || oldModel.isEmpty || newModel.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text("Installment amount and total due are required"),
+          content: const Text(
+            "New IMEI, old model, and new model are required",
+          ),
           backgroundColor: Colors.red.shade700,
           behavior: SnackBarBehavior.floating,
         ),
@@ -130,46 +131,58 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
 
     final url = Uri.parse('$SymphonyURL/api/sale-replace');
     final body = jsonEncode({
-      "new_imei": new_imei1,
-      "new_model": new_model,
-      "old_imei_1": old_imei1,
-      "old_imei_2": old_imei2,
-      "old_model": old_model,
+      "new_imei": newImei1,
+      "new_model": newModel,
+      "old_imei_1": oldImei1,
+      "old_imei_2": oldImei2,
+      "old_model": oldModel,
       "manager_id": "31012",
       "manager_name": "Branch Manager",
       "replaced_by_user_id": "198116",
       "replaced_by_user_name": "CSM,Shariatpur",
-      "date_of_approval": "2026-08-05"
-    }
-    );
-
+      "date_of_approval": DateTime.now().toIso8601String().split('T').first,
+    });
 
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'iF3PTw5zRSMTAyMTY=7JdKeu2ULE3A=='
+      'Authorization': 'iF3PTw5zRSMTAyMTY=7JdKeu2ULE3A==',
     };
 
     try {
-      final res = await http.post(
-        url,
-        body: body,
-        headers: headers,
-      );
+      final res = await http.post(url, body: body, headers: headers);
 
       print("Status Code: ${res.statusCode}");
       print("Response: ${res.body}");
       if (res.statusCode == 200) {
         final json = jsonDecode(res.body);
 
-        if (json["status"] == true) {
+        if (json["status"] == 200) {
           final data = json["data"];
           print(data);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Sale replacement completed"),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
           setState(() {
             isLoading = false;
           });
+        } else {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                json["message"]?.toString() ?? "Sale replacement failed",
+              ),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         }
-      }
-      else {
+      } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -185,7 +198,9 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text("Something went wrong. Please check your network connection."),
+          content: const Text(
+            "Something went wrong. Please check your network connection.",
+          ),
           backgroundColor: Colors.red.shade700,
           behavior: SnackBarBehavior.floating,
         ),
@@ -198,10 +213,8 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       }
     }
   }
-  Widget _sectionHeader({
-    required IconData icon,
-    required String title,
-  }) {
+
+  Widget _sectionHeader({required IconData icon, required String title}) {
     return Row(
       children: [
         Container(
@@ -211,11 +224,7 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
             borderRadius: BorderRadius.circular(9),
           ),
 
-          child: Icon(
-            icon,
-            color: const Color(0xFF1A237E),
-            size: 20,
-          ),
+          child: Icon(icon, color: const Color(0xFF1A237E), size: 20),
         ),
 
         const SizedBox(width: 10),
@@ -231,18 +240,15 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       ],
     );
   }
-  Widget _card({
-    required Widget child,
-  }) {
+
+  Widget _card({required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
 
-        border: Border.all(
-          color: const Color(0xFFE2E8F0),
-        ),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
 
         boxShadow: [
           BoxShadow(
@@ -256,6 +262,7 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       child: child,
     );
   }
+
   Widget _buildApplicationCard() {
     return _card(
       child: Column(
@@ -266,19 +273,14 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
             value: customer?.applicationId ?? 'N/A',
           ),
           const SizedBox(height: 18),
-          _infoRow(
-            label: 'Imei 1',
-            value: old_imei1 ?? 'N/A',
-          ),
+          _infoRow(label: 'Imei 1', value: old_imei1 ?? 'N/A'),
           const SizedBox(height: 12),
-          _infoRow(
-            label: 'Imei 2',
-            value: old_imei2 ?? 'N/A',
-          ),
+          _infoRow(label: 'Imei 2', value: old_imei2 ?? 'N/A'),
         ],
       ),
     );
   }
+
   Widget _buildPaymentCard() {
     return _card(
       child: Column(
@@ -286,11 +288,10 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
         children: [
           _sectionHeader(
             icon: Icons.phone_android_outlined,
-            title: 'Update Installment',
+            title: 'Update Imei Information',
           ),
 
           const SizedBox(height: 18),
-
 
           // IMEI 1
           _buildEditableField(
@@ -404,9 +405,7 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
                       },
                       child: const Text(
                         'Change Imei',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -418,6 +417,7 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       ),
     );
   }
+
   InputDecoration _inputDecoration({
     required String hint,
     required IconData icon,
@@ -425,49 +425,32 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
     return InputDecoration(
       hintText: hint,
 
-      prefixIcon: Icon(
-        icon,
-        size: 20,
-        color: const Color(0xFF64748B),
-      ),
+      prefixIcon: Icon(icon, size: 20, color: const Color(0xFF64748B)),
 
       filled: true,
 
       fillColor: const Color(0xFFF8FAFC),
 
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 14,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
 
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(
-          color: Color(0xFFE2E8F0),
-        ),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
 
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(
-          color: Color(0xFFE2E8F0),
-        ),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
 
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(
-          color: Color(0xFF1A237E),
-          width: 1.5,
-        ),
+        borderSide: const BorderSide(color: Color(0xFF1A237E), width: 1.5),
       ),
     );
   }
 
-  Widget _infoRow({
-    required String label,
-    required String value,
-  }) {
+  Widget _infoRow({required String label, required String value}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -502,6 +485,7 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       ],
     );
   }
+
   Widget _primaryButton({
     required IconData icon,
     required String text,
@@ -512,22 +496,17 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       child: ElevatedButton.icon(
         onPressed: onPressed,
 
-        icon: Icon(
-          icon,
-          size: 18,
-        ),
+        icon: Icon(icon, size: 18),
 
         label: Text(text),
 
         style: ElevatedButton.styleFrom(
-          backgroundColor:  const Color(0xFF000080),
+          backgroundColor: const Color(0xFF000080),
           foregroundColor: Colors.white,
 
           elevation: 0,
 
-          padding: const EdgeInsets.symmetric(
-            vertical: 14,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 14),
 
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -536,6 +515,7 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       ),
     );
   }
+
   Widget _buildEditableField({
     required TextEditingController controller,
     required String label,
@@ -546,14 +526,7 @@ class _SymphonySaleReplacePageState extends State<SymphonySaleReplace> {
       controller: controller,
       keyboardType: keyboardType,
 
-      decoration: _inputDecoration(
-        hint: label,
-        icon: icon,
-      ),
+      decoration: _inputDecoration(hint: label, icon: icon),
     );
   }
 }
-
-
-
-

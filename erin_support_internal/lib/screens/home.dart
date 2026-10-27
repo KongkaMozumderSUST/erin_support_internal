@@ -118,7 +118,7 @@ class _HomeState extends State<Home> {
         return Scaffold(
           appBar: isMobile
               ? AppBar(
-                  backgroundColor: const Color(0xFF000080),
+                  backgroundColor: const Color(0xFF155dfc),
                   foregroundColor: Colors.white,
                   title: const Text(
                     'eRin Support',

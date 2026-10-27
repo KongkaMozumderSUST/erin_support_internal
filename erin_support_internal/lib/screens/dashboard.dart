@@ -1197,7 +1197,7 @@ class _DashboardState extends State<Dashboard> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF000080),
+            color: const Color(0xFF155dfc),
             borderRadius:
             BorderRadius.circular(20),
             boxShadow: [

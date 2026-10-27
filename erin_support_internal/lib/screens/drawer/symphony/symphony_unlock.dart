@@ -411,7 +411,7 @@ class _SymphonyUnlockPageState extends State<SymphonyUnlock> {
         label: Text(text),
 
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF000080),
+          backgroundColor: const Color(0xFF155dfc),
           foregroundColor: Colors.white,
 
           elevation: 0,
